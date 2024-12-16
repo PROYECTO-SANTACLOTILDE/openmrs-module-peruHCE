@@ -1,73 +1,55 @@
-/**
- * This Source Code Form is subject to the terms of the Mozilla Public License,
- * v. 2.0. If a copy of the MPL was not distributed with this file, You can
- * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
- * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
- * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
- * graphic logo is a trademark of OpenMRS Inc.
- */
 package org.openmrs.module.department;
 
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.User;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import org.openmrs.BaseOpenmrsObject;
 
-/**
- * Please note that a corresponding table schema must be created in liquibase.xml.
- */
-//Uncomment 2 lines below if you want to make the Item class persistable, see also DepartmentDaoTest and liquibase.xml
-//@Entity(name = "department.Item")
-//@Table(name = "department_item")
-public class Item extends BaseOpenmrsData {
+@Entity
+@Table(name = "department_department")
+public class Department extends BaseOpenmrsObject implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue
-	@Column(name = "department_item_id")
-	private Integer id;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "department_id")
+	private Integer departmentId;
 	
-	@ManyToOne
-	@JoinColumn(name = "owner")
-	private User owner;
+	@Column(name = "name", length = 255, unique = true)
+	private String name;
 	
-	@Basic
 	@Column(name = "description", length = 255)
 	private String description;
 	
+	// Getters y Setters...
+	
+	public Integer getDepartmentId() {
+		return departmentId;
+	}
+	
+	public void setDepartmentId(Integer departmentId) {
+		this.departmentId = departmentId;
+	}
+	
 	@Override
 	public Integer getId() {
-		return id;
+		return getDepartmentId();
 	}
 	
 	@Override
 	public void setId(Integer id) {
-		this.id = id;
+		setDepartmentId(id);
 	}
 	
-	@Override
-	public String getUuid() {
-		return super.getUuid();
+	public String getName() {
+		return name;
 	}
 	
-	@Override
-	public void setUuid(String uuid) {
-		super.setUuid(uuid);
-	}
-	
-	public User getOwner() {
-		return owner;
-	}
-	
-	public void setOwner(User owner) {
-		this.owner = owner;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public String getDescription() {
