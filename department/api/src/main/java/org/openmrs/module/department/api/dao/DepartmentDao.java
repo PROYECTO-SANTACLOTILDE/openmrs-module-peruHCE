@@ -14,25 +14,25 @@ public class DepartmentDao {
 	
 	@Autowired
 	private DbSessionFactory sessionFactory;
-
+	
 	private DbSession getSession() {
 		return sessionFactory.getCurrentSession();
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<Department> getAllDepartments() {
 		return getSession().createCriteria(Department.class).list();
 	}
-
+	
 	public Department getDepartment(Integer departmentId) {
 		return (Department) getSession().get(Department.class, departmentId);
 	}
-
+	
 	public Department saveDepartment(Department department) {
 		getSession().saveOrUpdate(department);
 		return department;
 	}
-
+	
 	public void purgeDepartment(Department department) {
 		getSession().delete(department);
 	}

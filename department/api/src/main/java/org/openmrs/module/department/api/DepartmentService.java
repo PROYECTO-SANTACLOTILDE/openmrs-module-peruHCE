@@ -9,19 +9,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface DepartmentService extends OpenmrsService {
-
+	
 	@Authorized()
 	@Transactional(readOnly = true)
 	List<Department> getAllDepartments() throws APIException;
-
+	
 	@Authorized()
 	@Transactional(readOnly = true)
 	Department getDepartment(Integer departmentId) throws APIException;
-
+	
 	@Authorized()
 	@Transactional
 	Department saveDepartment(Department department) throws APIException;
-
+	
 	@Authorized()
 	@Transactional
 	void purgeDepartment(Department department) throws APIException;

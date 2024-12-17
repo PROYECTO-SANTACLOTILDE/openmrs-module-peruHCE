@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    
+    <!-- Definición del cambio para crear la tabla department_department -->
+    <changeSet id="department-2024-12-16-01" author="pedro">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="department_department"/></not>
+        </preConditions>
+        <comment>
+            Creating the department_department table
+        </comment>
+        
+        <!-- Creación de la tabla department_department con las columnas definidas en la entidad Department -->
+        <createTable tableName="department_department">
+            <column name="department_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"></constraints>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"></constraints>
+            </column>
+            <column name="description" type="varchar(255)" />
+        </createTable>
+    </changeSet>
+    
+</databaseChangeLog>

@@ -1,0 +1,2 @@
+org\openmrs\module\department\api\DepartmentServiceTest.class
+org\openmrs\module\department\api\dao\DepartmentDaoTest.class

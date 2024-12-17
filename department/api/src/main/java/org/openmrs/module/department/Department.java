@@ -10,7 +10,7 @@ import org.openmrs.BaseOpenmrsObject;
 @Entity
 @Table(name = "department_department")
 public class Department extends BaseOpenmrsObject implements Serializable {
-
+	
 	private static final long serialVersionUID = 1L;
 	
 	@Id

@@ -1,0 +1,2 @@
+org\openmrs\module\department\extension\html\AdminList.class
+org\openmrs\module\department\web\controller\DepartmentController.class

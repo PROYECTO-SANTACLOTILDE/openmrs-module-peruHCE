@@ -14,5 +14,4 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-public class DepartmentServiceTest {
-}
+public class DepartmentServiceTest {}

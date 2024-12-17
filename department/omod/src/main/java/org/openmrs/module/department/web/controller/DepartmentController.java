@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 @RequestMapping(value = "/module/department/department.form")
 public class DepartmentController {
@@ -38,7 +37,6 @@ public class DepartmentController {
 	//	Form view name
 	private final String FORM_VIEW = "/module/department/pages/addDepartment";
 	
-	
 	//	Initially called after the getUsers method to get the landing form name.
 	//	@return String form view name
 	
@@ -53,7 +51,6 @@ public class DepartmentController {
 		
 		return FORM_VIEW;
 	}
-	
 	
 	//	Handles form submissions.
 	
@@ -84,7 +81,6 @@ public class DepartmentController {
 		}
 		return "redirect:/module/department/department.form";
 	}
-	
 	
 	//	Returns the form backing object. This can be a string, a boolean, or a normal java pojo.
 	
