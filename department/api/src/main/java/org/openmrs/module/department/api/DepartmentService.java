@@ -16,6 +16,10 @@ public interface DepartmentService extends OpenmrsService {
 	
 	@Authorized()
 	@Transactional(readOnly = true)
+	List<Department> getAllDepartmentsPrueba() throws APIException;
+	
+	@Authorized()
+	@Transactional(readOnly = true)
 	Department getDepartment(Integer departmentId) throws APIException;
 	
 	@Authorized()

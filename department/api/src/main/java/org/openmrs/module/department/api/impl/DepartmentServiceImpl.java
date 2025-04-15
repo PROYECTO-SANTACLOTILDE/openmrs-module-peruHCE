@@ -23,6 +23,11 @@ public class DepartmentServiceImpl extends BaseOpenmrsService implements Departm
 	}
 	
 	@Override
+	public List<Department> getAllDepartmentsPrueba() throws APIException {
+		return dao.getAllDepartmentsPrueba();
+	}
+	
+	@Override
 	public Department getDepartment(Integer departmentId) throws APIException {
 		return dao.getDepartment(departmentId);
 	}

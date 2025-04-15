@@ -1,17 +1,14 @@
 package org.openmrs.module.department.web.controller;
-
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
-
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.department.Department;
 import org.openmrs.module.department.api.DepartmentService;
-
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,11 +18,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/module/department/department.form")
 public class DepartmentController {
-	
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	@Autowired
@@ -88,6 +85,13 @@ public class DepartmentController {
 	protected List<User> getUsers() {
 		List<User> users = userService.getAllUsers();
 		return users;
+	}
+	
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public List<Department> getAllDepartmentsPrueba() {
+		log.info("Llamada al endpoint /list");
+		return departmentService.getAllDepartmentsPrueba();
 	}
 	
 }
