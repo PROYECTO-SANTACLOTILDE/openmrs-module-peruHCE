@@ -1,4 +1,4 @@
-package main.java.org.openmrs.module.fua;
+package org.openmrs.module.fua;
 
 import org.openmrs.BaseOpenmrsObject;
 

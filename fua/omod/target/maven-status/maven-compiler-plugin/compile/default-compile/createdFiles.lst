@@ -1,0 +1,5 @@
+org\openmrs\module\fua\web\controller\FuaXMLController.class
+org\openmrs\module\fua\web\controller\FuaController.class
+org\openmrs\module\fua\extension\html\AdminList.class
+org\openmrs\module\fua\web\controller\FormatoFuaController.class
+org\openmrs\module\fua\web\controller\FuaPDFController.class

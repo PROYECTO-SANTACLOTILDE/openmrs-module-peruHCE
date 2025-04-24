@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Tabla FormatoFua -->
     <changeSet id="formatofua-2025-04-15-01" author="pedro">
@@ -45,20 +45,19 @@
                 <constraints nullable="false"/>
             </column>
             <column name="payload" type="clob"/>
-
-            <!-- Foreign keys basados en UUID -->
-            <addForeignKeyConstraint baseTableName="fua"
-                                     baseColumnNames="visit_uuid"
-                                     referencedTableName="visit"
-                                     referencedColumnNames="uuid"
-                                     constraintName="fk_fua_visit"/>
-
-            <addForeignKeyConstraint baseTableName="fua"
-                                     baseColumnNames="formatofua_uuid"
-                                     referencedTableName="formatofua"
-                                     referencedColumnNames="uuid"
-                                     constraintName="fk_fua_formatofua"/>
         </createTable>
+
+        <addForeignKeyConstraint baseTableName="fua"
+                                 baseColumnNames="visit_uuid"
+                                 referencedTableName="visit"
+                                 referencedColumnNames="uuid"
+                                 constraintName="fk_fua_visit"/>
+
+        <addForeignKeyConstraint baseTableName="fua"
+                                 baseColumnNames="formatofua_uuid"
+                                 referencedTableName="formatofua"
+                                 referencedColumnNames="uuid"
+                                 constraintName="fk_fua_formatofua"/>
     </changeSet>
 
     <!-- Tabla Fuapdf -->

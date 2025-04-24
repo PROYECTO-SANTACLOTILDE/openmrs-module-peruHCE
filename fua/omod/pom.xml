@@ -13,21 +13,32 @@
 	<description>Omod submodule for Fua</description>
 
 	<dependencies>
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>fua-api</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>fua-api</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
-            <scope>provided</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.web</groupId>
 			<artifactId>openmrs-web</artifactId>
 			<scope>provided</scope>
 			<classifier>tests</classifier>
+		</dependency>
+		<!-- Spring dependencies para soporte de anotaciones REST -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>5.3.32</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>5.3.32</version>
 		</dependency>
 	</dependencies>
 
@@ -45,5 +56,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
