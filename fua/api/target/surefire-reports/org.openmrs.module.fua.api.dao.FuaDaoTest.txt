@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.openmrs.module.fua.api.dao.FuaDaoTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.737 s -- in org.openmrs.module.fua.api.dao.FuaDaoTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.320 s -- in org.openmrs.module.fua.api.dao.FuaDaoTest
