@@ -1,55 +1,56 @@
-<%@ include file="/WEB-INF/template/include.jsp"%>
-<%@ include file="/WEB-INF/template/header.jsp"%>
+<%@ include file="/WEB-INF/template/include.jsp" %>
+<%@ include file="/WEB-INF/template/header.jsp" %>
 
-<h2><spring:message code="fua.title" /></h2>
+<h2><spring:message code="fua.title" text="Formulario Único de Atención" /></h2>
 
-<br/>
-<h3>FUA Form</h3>
-<form method="post">
+<!-- Formulario simple para agregar un nuevo FUA -->
+<form action="fua.form" method="post">
     <fieldset>
-        <legend><openmrs:message code="fua.edit.title"/></legend>
+        <legend><spring:message code="fua.add.title" text="Agregar nuevo FUA" /></legend>
         <table>
             <tr>
-                <td><openmrs:message code="general.name"/></td>
-                <td>
-                    <spring:bind path="fua.name">
-                        <input type="text" name="name" value="${status.value}" size="35" />
-                        <c:if test="${status.errorMessage != ''}">
-                            <span class="error">${status.errorMessage}</span>
-                        </c:if>
-                    </spring:bind>
-                </td>
+                <td><label for="name">Nombre:</label></td>
+                <td><input type="text" id="name" name="name" value="${fua.name != null ? fua.name : ''}" /></td>
             </tr>
             <tr>
-                <td valign="top"><openmrs:message code="general.description"/></td>
-                <td valign="top">
-                    <spring:bind path="fua.description">
-                        <textarea name="description" rows="3" cols="40" onkeypress="return forceMaxLength(this, 1024);" >${status.value}</textarea>
-                        <c:if test="${status.errorMessage != ''}">
-                            <span class="error">${status.errorMessage}</span>
-                        </c:if>
-                    </spring:bind>
-                </td>
+                <td><label for="visitUuid">UUID de Visita:</label></td>
+                <td><input type="text" id="visitUuid" name="visitUuid" value="${fua.visitUuid != null ? fua.visitUuid : ''}" /></td>
+            </tr>
+            <tr>
+                <td><label for="formatoFuaUuid">UUID del Formato FUA:</label></td>
+                <td><input type="text" id="formatoFuaUuid" name="formatoFuaUuid" value="${fua.formatoFuaUuid != null ? fua.formatoFuaUuid : ''}" /></td>
+            </tr>
+            <tr>
+                <td><label for="payload">Contenido JSON:</label></td>
+                <td><textarea id="payload" name="payload" rows="5" cols="60">${fua.payload != null ? fua.payload : ''}</textarea></td>
             </tr>
         </table>
-        <br />
-        <input type="submit" value="<openmrs:message code='fua.save'/>" name="save">
+        <input type="submit" value="Guardar FUA" />
     </fieldset>
 </form>
 
-<br/>
-<h3>FUA List</h3>
-<table>
-  <tr>
-   <th>FUA Name</th>
-   <th>Description</th>
-  </tr>
-  <c:forEach var="fua" items="${fuas}">
-      <tr>
-        <td>${fua.name}</td>
-        <td>${fua.description}</td>
-      </tr>		
-  </c:forEach>
+<!-- Tabla con los FUAs existentes -->
+<h3><spring:message code="fua.list" text="Lista de FUAs registrados" /></h3>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>UUID</th>
+        <th>Nombre</th>
+        <th>Visita</th>
+        <th>Acción</th>
+    </tr>
+    <c:forEach items="${fuas}" var="fua">
+        <tr>
+            <td><c:out value="${fua.id}" /></td>
+            <td><c:out value="${fua.uuid}" /></td>
+            <td><c:out value="${fua.name}" /></td>
+            <td><c:out value="${fua.visitUuid}" /></td>
+            <td>
+                <a href="fua.form?fuaId=${fua.id}">Editar</a>
+            </td>
+        </tr>
+    </c:forEach>
 </table>
 
-<%@ include file="/WEB-INF/template/footer.jsp"%>
+<%@ include file="/WEB-INF/template/footer.jsp" %>
