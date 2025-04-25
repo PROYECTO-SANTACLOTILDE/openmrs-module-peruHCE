@@ -3,6 +3,11 @@
 
 <h2><spring:message code="fua.title" text="Formulario Único de Atención" /></h2>
 
+<!-- Botón para ir a la gestión de Formatos FUA -->
+<div style="margin-bottom: 20px;">
+    <a href="${pageContext.request.contextPath}/module/fua/formatofua.form"> + Crear o ver formatos FUA (UUID)</a>
+</div>
+
 <!-- Formulario simple para agregar un nuevo FUA -->
 <form action="fua.form" method="post">
     <fieldset>
