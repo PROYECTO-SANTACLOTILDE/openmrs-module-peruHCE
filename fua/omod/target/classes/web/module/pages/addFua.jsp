@@ -2,6 +2,12 @@
 <%@ include file="/WEB-INF/template/header.jsp" %>
 
 <h2><spring:message code="fua.title" text="Formulario Único de Atención" /></h2>
+<!-- Botón para ir a la gestión de Formatos FUA -->
+<div style="margin-bottom: 20px;">
+    <a href="formatofua.form" class="button" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;">
+        + Crear / Ver Formatos FUA
+    </a>
+</div>
 
 <!-- Formulario simple para agregar un nuevo FUA -->
 <form action="fua.form" method="post">
