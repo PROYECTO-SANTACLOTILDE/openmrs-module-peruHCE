@@ -1,5 +1,6 @@
 package org.openmrs.module.fua.api.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.APIException;
 import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
@@ -7,7 +8,9 @@ import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.dao.FuaDao;
 
+import org.apache.commons.lang3.StringUtils; // Asegúrate de importar esto
 import java.util.List;
+import java.util.UUID;
 
 public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	
@@ -29,6 +32,9 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	
 	@Override
 	public Fua saveFua(Fua fua) throws APIException {
+		if (StringUtils.isBlank(fua.getUuid())) {
+			fua.setUuid(UUID.randomUUID().toString());
+		}
 		return dao.saveFua(fua);
 	}
 	

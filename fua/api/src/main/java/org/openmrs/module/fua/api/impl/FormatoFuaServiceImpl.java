@@ -6,7 +6,9 @@ import org.openmrs.module.fua.FormatoFua;
 import org.openmrs.module.fua.api.FormatoFuaService;
 import org.openmrs.module.fua.api.dao.FormatoFuaDao;
 
+import org.apache.commons.lang3.StringUtils; // Asegúrate de importar esto
 import java.util.List;
+import java.util.UUID;
 
 public class FormatoFuaServiceImpl extends BaseOpenmrsService implements FormatoFuaService {
 	
@@ -28,6 +30,9 @@ public class FormatoFuaServiceImpl extends BaseOpenmrsService implements Formato
 	
 	@Override
 	public FormatoFua saveFormatoFua(FormatoFua formatoFua) throws APIException {
+		if (StringUtils.isBlank(formatoFua.getUuid())) {
+			formatoFua.setUuid(UUID.randomUUID().toString());
+		}
 		return dao.saveFormatoFua(formatoFua);
 	}
 	
