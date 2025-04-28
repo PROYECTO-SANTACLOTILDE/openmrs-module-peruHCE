@@ -101,6 +101,6 @@
 
 
     <properties>
-        <openmrsPlatformVersion>1.11.6</openmrsPlatformVersion>
+        <openmrsPlatformVersion>2.4.1</openmrsPlatformVersion>
     </properties>
 </project>
