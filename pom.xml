@@ -100,6 +100,10 @@
 	</build>
 
 	<distributionManagement>
+		<snapshotRepository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-peruHCE</url>
+		</snapshotRepository>
 		<repository>
 			<id>github</id>
 			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-peruHCE</url>
