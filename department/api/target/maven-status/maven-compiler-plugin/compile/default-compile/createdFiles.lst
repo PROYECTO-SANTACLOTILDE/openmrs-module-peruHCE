@@ -1,6 +1,0 @@
-org\openmrs\module\department\api\DepartmentService.class
-org\openmrs\module\department\Department.class
-org\openmrs\module\department\api\impl\DepartmentServiceImpl.class
-org\openmrs\module\department\DepartmentActivator.class
-org\openmrs\module\department\api\dao\DepartmentDao.class
-org\openmrs\module\department\DepartmentConfig.class
