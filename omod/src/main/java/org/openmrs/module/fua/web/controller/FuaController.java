@@ -68,12 +68,12 @@ public class FuaController {
 		return "redirect:/module/fua/fua.form";
 	}
 	
-	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
+	/*@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Fua> getAllFuas() {
 		log.info("Llamada a /module/fua/fua.form/list");
 		return fuaService.getAllFuas();
-	}
+	}*/
 	
 	@ModelAttribute("users")
 	protected List<User> getUsers() {
