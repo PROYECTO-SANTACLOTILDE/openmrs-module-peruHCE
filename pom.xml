@@ -113,5 +113,12 @@
 
 	<properties>
         <openmrsPlatformVersion>2.4.2</openmrsPlatformVersion>
+        <openMRSVersion>2.3.2</openMRSVersion>
+        <openMRSMinorVersion>2.3</openMRSMinorVersion>
+        <legacyuiVersion>1.7.0</legacyuiVersion>
+        <jacksonVersion>1.5.0</jacksonVersion>
+        <junitJupiterVersion>5.7.0</junitJupiterVersion>
+        <mockitoVersion>3.5.11</mockitoVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

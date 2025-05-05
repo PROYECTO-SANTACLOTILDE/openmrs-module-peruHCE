@@ -10,10 +10,13 @@ import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -68,15 +71,49 @@ public class FuaController {
 		return "redirect:/module/fua/fua.form";
 	}
 	
-	/*@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Fua> getAllFuas() {
 		log.info("Llamada a /module/fua/fua.form/list");
 		return fuaService.getAllFuas();
-	}*/
+	}
 	
 	@ModelAttribute("users")
 	protected List<User> getUsers() {
 		return userService.getAllUsers();
+	}
+	
+	// Nuevo endpoint
+	@RequestMapping(value = "/generateFromVisit/{visitUuid}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> generateFuaFromVisit(@PathVariable String visitUuid) {
+		try {
+			String url = "http://localhost:8080/openmrs/ws/rest/v1/visit/" + visitUuid + "?v=full";
+			RestTemplate restTemplate = new RestTemplate();
+			
+			ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+			
+			if (!response.getStatusCode().is2xxSuccessful()) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo obtener la visita.");
+			}
+			
+			String payload = response.getBody();
+			
+			Fua fua = new Fua();
+			fua.setVisitUuid(visitUuid);
+			fua.setFormatoFuaUuid("47d8617b-f25b-4ead-a7d5-20dc4808c339");
+			fua.setPayload(payload);
+			
+			fuaService.saveFua(fua);
+			
+			log.info("FUA generado exitosamente desde visita " + visitUuid);
+			return ResponseEntity.ok(fua);
+			
+		}
+		catch (Exception e) {
+			log.error("Error al generar FUA desde visita " + visitUuid, e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			        .body("Error al generar el FUA: " + e.getMessage());
+		}
 	}
 }
