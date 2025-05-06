@@ -2,7 +2,7 @@ package org.openmrs.module.fua.api.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.APIException;
-import org.openmrs.api.UserService;
+//import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.api.FuaService;

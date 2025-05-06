@@ -2,8 +2,8 @@ package org.openmrs.module.fua.web.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.User;
-import org.openmrs.api.UserService;
+/*import org.openmrs.User;
+import org.openmrs.api.UserService;*/
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.fua.FormatoFua;
@@ -27,8 +27,8 @@ public class FormatoFuaController {
 	@Autowired
 	private FormatoFuaService formatoFuaService;
 	
-	@Autowired
-	private UserService userService;
+	/*@Autowired
+	private UserService userService;*/
 	
 	private final String FORM_VIEW = "/module/fua/pages/addFormatoFua";
 	
@@ -75,8 +75,8 @@ public class FormatoFuaController {
 		return formatoFuaService.getAllFormatoFuas();
 	}
 	
-	@ModelAttribute("users")
+	/*@ModelAttribute("users")
 	protected List<User> getUsers() {
 		return userService.getAllUsers();
-	}
+	}*/
 }
