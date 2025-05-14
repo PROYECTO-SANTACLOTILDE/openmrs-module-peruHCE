@@ -4,8 +4,13 @@
 <h2><spring:message code="fua.title" text="Formulario Único de Atención" /></h2>
 
 <!-- Botón para ir a la gestión de Formatos FUA -->
+<div style="margin-bottom: 10px;">
+    <a href="${pageContext.request.contextPath}/module/fua/formatofua.form">+ Crear o ver formatos FUA (UUID)</a>
+</div>
+
+<!-- Botón para ir a la gestión de FUA Estado -->
 <div style="margin-bottom: 20px;">
-    <a href="${pageContext.request.contextPath}/module/fua/formatofua.form"> + Crear o ver formatos FUA (UUID)</a>
+    <a href="${pageContext.request.contextPath}/module/fua/fuaestado.form">+ Crear o ver estados FUA</a>
 </div>
 
 <!-- Formulario simple para agregar un nuevo FUA -->
@@ -22,8 +27,8 @@
                 <td><input type="text" id="visitUuid" name="visitUuid" value="${fua.visitUuid != null ? fua.visitUuid : ''}" /></td>
             </tr>
             <tr>
-                <td><label for="formatoFuaUuid">UUID del Formato FUA:</label></td>
-                <td><input type="text" id="formatoFuaUuid" name="formatoFuaUuid" value="${fua.formatoFuaUuid != null ? fua.formatoFuaUuid : ''}" /></td>
+                <td><label for="fuaEstadoId">ID del Estado FUA:</label></td>
+                <td><input type="text" id="fuaEstadoId" name="fuaEstadoId" value="${fua.fuaEstadoId != null ? fua.fuaEstadoId : ''}" /></td>
             </tr>
             <tr>
                 <td><label for="payload">Contenido JSON:</label></td>

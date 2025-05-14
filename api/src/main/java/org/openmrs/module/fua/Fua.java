@@ -20,15 +20,17 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 	@Column(name = "visit_uuid", nullable = false, length = 38)
 	private String visitUuid;
 	
-	@Column(name = "formatofua_uuid", nullable = false, length = 38)
-	private String formatoFuaUuid;
-	
 	@Column(name = "name", nullable = false, length = 255)
 	private String name;
 	
 	@Lob
 	@Column(name = "payload")
 	private String payload;
+	
+	@Column(name = "fua_estado_id", nullable = false)
+	private Integer fuaEstadoId;
+	
+	// Getters y setters existentes + nuevos sin cambiar nombres
 	
 	public Integer getId() {
 		return id;
@@ -38,12 +40,10 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 		this.id = id;
 	}
 	
-	@Override
 	public String getUuid() {
 		return uuid;
 	}
 	
-	@Override
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
@@ -54,14 +54,6 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 	
 	public void setVisitUuid(String visitUuid) {
 		this.visitUuid = visitUuid;
-	}
-	
-	public String getFormatoFuaUuid() {
-		return formatoFuaUuid;
-	}
-	
-	public void setFormatoFuaUuid(String formatoFuaUuid) {
-		this.formatoFuaUuid = formatoFuaUuid;
 	}
 	
 	public String getName() {
@@ -78,5 +70,13 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 	
 	public void setPayload(String payload) {
 		this.payload = payload;
+	}
+	
+	public Integer getFuaEstadoId() {
+		return fuaEstadoId;
+	}
+	
+	public void setFuaEstadoId(Integer estadoId) {
+		this.fuaEstadoId = estadoId;
 	}
 }

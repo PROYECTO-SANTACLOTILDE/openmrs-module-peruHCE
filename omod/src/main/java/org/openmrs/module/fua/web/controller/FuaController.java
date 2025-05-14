@@ -123,8 +123,8 @@ public class FuaController {
 			Fua fua = new Fua();
 			fua.setName("PRUEBA DE generateFuaFromVisit");
 			fua.setVisitUuid(visitUuid);
-			fua.setFormatoFuaUuid("47d8617b-f25b-4ead-a7d5-20dc4808c339");
 			fua.setPayload(payload);
+			fua.setFuaEstadoId(1);
 
 			fuaService.saveFua(fua);
 

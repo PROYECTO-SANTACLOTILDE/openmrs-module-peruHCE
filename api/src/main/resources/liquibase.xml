@@ -6,7 +6,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Tabla FormatoFua -->
-    <changeSet id="formatofua-2025-04-15-01" author="pedro">
+    <changeSet id="formatofua-2025-05-14-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="formatofua"/></not>
         </preConditions>
@@ -23,8 +23,26 @@
         </createTable>
     </changeSet>
 
+    <!-- Tabla fua_estado -->
+    <changeSet id="fua_estado-2025-05-14-01" author="pedro">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="fua_estado"/></not>
+        </preConditions>
+        <createTable tableName="fua_estado">
+            <column name="fua_estado_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="nombre" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
     <!-- Tabla Fua -->
-    <changeSet id="fua-2025-04-15-01" author="pedro">
+    <changeSet id="fua-2025-05-14-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua"/></not>
         </preConditions>
@@ -38,13 +56,19 @@
             <column name="visit_uuid" type="char(38)">
                 <constraints nullable="false"/>
             </column>
-            <column name="formatofua_uuid" type="char(38)">
-                <constraints nullable="false"/>
-            </column>
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="payload" type="clob"/>
+            <column name="fua_estado_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_creacion" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_actualizacion" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="fua"
@@ -54,60 +78,10 @@
                                  constraintName="fk_fua_visit"/>
 
         <addForeignKeyConstraint baseTableName="fua"
-                                 baseColumnNames="formatofua_uuid"
-                                 referencedTableName="formatofua"
-                                 referencedColumnNames="uuid"
-                                 constraintName="fk_fua_formatofua"/>
-    </changeSet>
-
-    <!-- Tabla Fuapdf -->
-    <changeSet id="fuapdf-2025-04-15-01" author="pedro">
-        <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="fuapdf"/></not>
-        </preConditions>
-        <createTable tableName="fuapdf">
-            <column name="fuapdf_id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="uuid" type="char(38)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="fua_uuid" type="char(38)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="archivo" type="clob"/>
-        </createTable>
-
-        <addForeignKeyConstraint baseTableName="fuapdf"
-                                 baseColumnNames="fua_uuid"
-                                 referencedTableName="fua"
-                                 referencedColumnNames="uuid"
-                                 constraintName="fk_fuapdf_fua"/>
-    </changeSet>
-
-    <!-- Tabla Fuaxml -->
-    <changeSet id="fuaxml-2025-04-15-01" author="pedro">
-        <preConditions onFail="MARK_RAN">
-            <not><tableExists tableName="fuaxml"/></not>
-        </preConditions>
-        <createTable tableName="fuaxml">
-            <column name="fuaxml_id" type="int" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="uuid" type="char(38)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="fua_uuid" type="char(38)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="archivo" type="clob"/>
-        </createTable>
-
-        <addForeignKeyConstraint baseTableName="fuaxml"
-                                 baseColumnNames="fua_uuid"
-                                 referencedTableName="fua"
-                                 referencedColumnNames="uuid"
-                                 constraintName="fk_fuaxml_fua"/>
+                                 baseColumnNames="fua_estado_id"
+                                 referencedTableName="fua_estado"
+                                 referencedColumnNames="fua_estado_id"
+                                 constraintName="fk_fua_estado"/>
     </changeSet>
 
 </databaseChangeLog>
