@@ -25,4 +25,9 @@ public interface FuaService extends OpenmrsService {
 	@Authorized()
 	@Transactional
 	void purgeFua(Fua fua) throws APIException;
+	
+	@Authorized()
+	@Transactional(readOnly = true)
+	Fua getFuaByUuid(String uuid) throws APIException;
+	
 }

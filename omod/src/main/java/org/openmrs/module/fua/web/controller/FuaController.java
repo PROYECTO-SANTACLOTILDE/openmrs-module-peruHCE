@@ -82,7 +82,19 @@ public class FuaController {
 		log.info("Llamada a /module/fua/fua.form/list");
 		return fuaService.getAllFuas();
 	}
-	
+
+	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> getFuaByUuid(@PathVariable("uuid") String uuid) {
+		Fua fua = fuaService.getFuaByUuid(uuid);
+
+        if (fua == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado.");
+		}
+
+		return ResponseEntity.ok(fua);
+	}
+
 	/*@ModelAttribute("users")
 	protected List<User> getUsers() {
 		return userService.getAllUsers();

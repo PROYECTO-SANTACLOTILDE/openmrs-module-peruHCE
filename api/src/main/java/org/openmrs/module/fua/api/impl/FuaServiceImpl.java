@@ -42,4 +42,10 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	public void purgeFua(Fua fua) throws APIException {
 		dao.purgeFua(fua);
 	}
+	
+	@Override
+	public Fua getFuaByUuid(String uuid) throws APIException {
+		return dao.getFuaByUuid(uuid);
+	}
+	
 }

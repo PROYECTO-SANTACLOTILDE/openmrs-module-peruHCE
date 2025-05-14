@@ -35,4 +35,9 @@ public class FuaDao {
 	public void purgeFua(Fua fua) {
 		getSession().delete(fua);
 	}
+	
+	public Fua getFuaByUuid(String uuid) {
+		return (Fua) getSession().createQuery("FROM Fua f WHERE f.uuid = :uuid").setParameter("uuid", uuid).uniqueResult();
+	}
+	
 }
