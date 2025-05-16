@@ -6,7 +6,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Tabla FormatoFua -->
-    <changeSet id="formatofua-2025-05-14-01" author="pedro">
+    <changeSet id="formatofua-2025-05-15-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="formatofua"/></not>
         </preConditions>
@@ -24,7 +24,7 @@
     </changeSet>
 
     <!-- Tabla fua_estado -->
-    <changeSet id="fua_estado-2025-05-14-01" author="pedro">
+    <changeSet id="fua_estado-2025-05-15-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_estado"/></not>
         </preConditions>
@@ -42,7 +42,7 @@
     </changeSet>
 
     <!-- Tabla Fua -->
-    <changeSet id="fua-2025-05-14-01" author="pedro">
+    <changeSet id="fua-2025-05-15-02" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua"/></not>
         </preConditions>

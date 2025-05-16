@@ -27,8 +27,17 @@
                 <td><input type="text" id="visitUuid" name="visitUuid" value="${fua.visitUuid != null ? fua.visitUuid : ''}" /></td>
             </tr>
             <tr>
-                <td><label for="fuaEstadoId">ID del Estado FUA:</label></td>
-                <td><input type="text" id="fuaEstadoId" name="fuaEstadoId" value="${fua.fuaEstadoId != null ? fua.fuaEstadoId : ''}" /></td>
+                <td><label for="fuaEstado">Estado FUA:</label></td>
+                <td>
+                    <select id="fuaEstado" name="fuaEstado.uuid">
+                        <c:forEach items="${fuaEstados}" var="estado">
+                            <option value="${estado.uuid}"
+                                <c:if test="${fua.fuaEstado != null and fua.fuaEstado.uuid == estado.uuid}">selected</c:if>>
+                                ${estado.nombre}
+                            </option>
+                        </c:forEach>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td><label for="payload">Contenido JSON:</label></td>

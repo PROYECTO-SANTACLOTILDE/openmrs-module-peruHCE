@@ -7,9 +7,12 @@ import org.openmrs.api.UserService;*/
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.fua.Fua;
+import org.openmrs.module.fua.FuaEstado;
+import org.openmrs.module.fua.api.FuaEstadoService;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -24,6 +27,8 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -34,6 +39,9 @@ public class FuaController {
 	
 	@Autowired
 	private FuaService fuaService;
+
+	@Autowired
+	private FuaEstadoService fuaEstadoService;
 	
 	/*@Autowired
 	private UserService userService;*/
@@ -45,6 +53,7 @@ public class FuaController {
 		Fua fua = (fuaId != null) ? fuaService.getFua(fuaId) : new Fua();
 		model.addAttribute("fua", fua);
 		model.addAttribute("fuas", fuaService.getAllFuas());
+		model.addAttribute("fuaEstados", fuaEstadoService.getAllEstados());
 		return FORM_VIEW;
 	}
 	
@@ -95,6 +104,35 @@ public class FuaController {
 		return ResponseEntity.ok(fua);
 	}
 
+	@RequestMapping(value = "/solicitudes", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> getSolicitudesFUA(
+			@RequestParam(value = "status", required = false) String estado,
+			@RequestParam(value = "fechaInicio", required = false) String fechaInicioStr,
+			@RequestParam(value = "fechaFin", required = false) String fechaFinStr,
+			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size
+	) {
+		DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+		LocalDate fechaInicio = null;
+		LocalDate fechaFin = null;
+
+		try {
+			if (fechaInicioStr != null) {
+				fechaInicio = LocalDate.parse(fechaInicioStr, formatter);
+			}
+			if (fechaFinStr != null) {
+				fechaFin = LocalDate.parse(fechaFinStr, formatter);
+			}
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("Formato de fecha inválido. Use yyyy-MM-dd");
+		}
+
+		List<Fua> resultados = fuaService.getFuasFiltrados(estado, fechaInicio, fechaFin, page, size);
+		return ResponseEntity.ok(resultados);
+	}
+
+
 	/*@ModelAttribute("users")
 	protected List<User> getUsers() {
 		return userService.getAllUsers();
@@ -132,11 +170,13 @@ public class FuaController {
 
 			String payload = response.getBody();
 
+			FuaEstado estadoPendiente = fuaEstadoService.getEstado(1);
+
 			Fua fua = new Fua();
 			fua.setName("PRUEBA DE generateFuaFromVisit");
 			fua.setVisitUuid(visitUuid);
 			fua.setPayload(payload);
-			fua.setFuaEstadoId(1);
+			fua.setFuaEstado(estadoPendiente);
 
 			fuaService.saveFua(fua);
 

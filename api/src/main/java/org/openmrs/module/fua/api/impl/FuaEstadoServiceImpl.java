@@ -40,4 +40,9 @@ public class FuaEstadoServiceImpl extends BaseOpenmrsService implements FuaEstad
 	public void purgeEstado(FuaEstado estado) throws APIException {
 		dao.purgeEstado(estado);
 	}
+	
+	@Override
+	public FuaEstado getByUuid(String uuid) {
+		return dao.getByUuid(uuid);
+	}
 }

@@ -9,6 +9,8 @@ import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.dao.FuaDao;
 
 import org.apache.commons.lang3.StringUtils; // Asegúrate de importar esto
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,6 +48,12 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	@Override
 	public Fua getFuaByUuid(String uuid) throws APIException {
 		return dao.getFuaByUuid(uuid);
+	}
+	
+	@Override
+	public List<Fua> getFuasFiltrados(String estado, LocalDate inicio, LocalDate fin, int page, int size) {
+		int offset = (page - 1) * size;
+		return dao.getFuasFiltrados(estado, inicio, fin, offset, size);
 	}
 	
 }
