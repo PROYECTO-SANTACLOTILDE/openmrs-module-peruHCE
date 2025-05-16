@@ -4,6 +4,7 @@ import org.openmrs.BaseOpenmrsObject;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "fua")
@@ -30,7 +31,15 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 	@Column(name = "fua_estado_id", nullable = false)
 	private Integer fuaEstadoId;
 	
-	// Getters y setters existentes + nuevos sin cambiar nombres
+	@Column(name = "fecha_creacion", updatable = false, insertable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaCreacion;
+	
+	@Column(name = "fecha_actualizacion", insertable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaActualizacion;
+	
+	// --- Getters y Setters ---
 	
 	public Integer getId() {
 		return id;
@@ -76,7 +85,15 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 		return fuaEstadoId;
 	}
 	
-	public void setFuaEstadoId(Integer estadoId) {
-		this.fuaEstadoId = estadoId;
+	public void setFuaEstadoId(Integer fuaEstadoId) {
+		this.fuaEstadoId = fuaEstadoId;
+	}
+	
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+	
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
 	}
 }

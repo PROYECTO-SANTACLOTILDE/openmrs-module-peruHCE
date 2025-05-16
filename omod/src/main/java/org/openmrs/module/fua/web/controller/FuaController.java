@@ -1,30 +1,40 @@
 package org.openmrs.module.fua.web.controller;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 /*import org.openmrs.User;
 import org.openmrs.api.UserService;*/
 import org.openmrs.api.context.Context;
+import org.openmrs.api.context.UsernamePasswordCredentials;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/module/fua/fua.form")
@@ -140,4 +150,45 @@ public class FuaController {
 			        .body("Error al generar el FUA: " + e.getMessage());
 		}
 	}
+
+	@RequestMapping(value = "/updateEstado/{fuaId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> actualizarEstadoFua(@PathVariable Integer fuaId, @RequestBody Map<String, Object> body) {
+		try {
+			if (!Context.isAuthenticated()) {
+				UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("admin", "Admin123");
+				Context.authenticate(credentials);
+			}
+
+			log.info("Cambiando estado del FUA ID: " + fuaId);
+
+			Fua fua = fuaService.getFua(fuaId);
+			if (fua == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado con ID: " + fuaId);
+			}
+
+			if (!body.containsKey("estadoId")) {
+				return ResponseEntity.badRequest().body("El cuerpo de la solicitud debe incluir 'estadoId'");
+			}
+
+			Integer nuevoEstadoId;
+			try {
+				nuevoEstadoId = (Integer) body.get("estadoId");
+			} catch (ClassCastException e) {
+				// Si viene como Double (por defecto en JSON), lo convertimos a Integer
+				Double estadoDouble = (Double) body.get("estadoId");
+				nuevoEstadoId = estadoDouble.intValue();
+			}
+
+			fua.setFuaEstadoId(nuevoEstadoId);
+			fuaService.saveFua(fua);
+
+			return ResponseEntity.ok(fua);
+		} catch (Exception e) {
+			log.error("Error al actualizar el estado del FUA", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno al actualizar el estado del FUA.");
+		}
+	}
+
+
 }

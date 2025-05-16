@@ -6,7 +6,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Tabla FormatoFua -->
-    <changeSet id="formatofua-2025-05-14-01" author="pedro">
+    <changeSet id="formatofua-2025-05-15-04" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="formatofua"/></not>
         </preConditions>
@@ -24,7 +24,7 @@
     </changeSet>
 
     <!-- Tabla fua_estado -->
-    <changeSet id="fua_estado-2025-05-14-01" author="pedro">
+    <changeSet id="fua_estado-2025-05-15-04" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_estado"/></not>
         </preConditions>
@@ -41,8 +41,8 @@
         </createTable>
     </changeSet>
 
-    <!-- Tabla Fua -->
-    <changeSet id="fua-2025-05-14-01" author="pedro">
+    <!-- Tabla Fua --> 
+    <changeSet id="fua-2025-05-15-07" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua"/></not>
         </preConditions>
@@ -82,6 +82,17 @@
                                  referencedTableName="fua_estado"
                                  referencedColumnNames="fua_estado_id"
                                  constraintName="fk_fua_estado"/>
+    </changeSet>
+
+    <!-- Trigger para actualizar fecha_actualizacion -->
+    <changeSet id="trigger_fua_fechaActualizacion-2025-05-15-01" author="pedro" dbms="mysql">
+        <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE</comment>
+        <sql>
+            CREATE TRIGGER trg_fua_update_timestamp
+            BEFORE UPDATE ON fua
+            FOR EACH ROW
+            SET NEW.fecha_actualizacion = CURRENT_TIMESTAMP;
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

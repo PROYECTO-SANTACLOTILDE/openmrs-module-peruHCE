@@ -20,10 +20,7 @@
 	<require_version>1.11.6</require_version>
 	
 	<!-- Extensions -->
-	<extension>
-		<point>org.openmrs.admin.list</point>
-		<class>org.openmrs.module.fua.extension.html.AdminList</class>
-	</extension>
+	
 
 	<aware_of_modules>
 		<aware_of_module>org.openmrs.module.legacyui</aware_of_module>

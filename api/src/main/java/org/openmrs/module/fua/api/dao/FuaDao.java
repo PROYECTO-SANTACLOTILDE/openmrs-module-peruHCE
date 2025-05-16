@@ -35,4 +35,13 @@ public class FuaDao {
 	public void purgeFua(Fua fua) {
 		getSession().delete(fua);
 	}
+	
+	public void updateEstado(Integer fuaId, Integer nuevoEstadoId) {
+		Fua fua = getFua(fuaId);
+		if (fua != null) {
+			fua.setFuaEstadoId(nuevoEstadoId);
+			saveFua(fua);
+		}
+	}
+	
 }

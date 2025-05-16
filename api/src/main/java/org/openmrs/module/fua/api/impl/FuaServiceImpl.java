@@ -42,4 +42,15 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	public void purgeFua(Fua fua) throws APIException {
 		dao.purgeFua(fua);
 	}
+	
+	@Override
+	public void updateEstado(Integer fuaId, Integer nuevoEstadoId) throws APIException {
+		Fua fua = dao.getFua(fuaId);
+		if (fua == null) {
+			throw new APIException("FUA no encontrado con ID: " + fuaId);
+		}
+		fua.setFuaEstadoId(nuevoEstadoId);
+		dao.saveFua(fua);
+	}
+	
 }
