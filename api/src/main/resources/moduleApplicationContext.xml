@@ -56,35 +56,6 @@
         </property>
     </bean>
 
-    <!-- CONFIGURACION PARA FORMATOFUA-->
-    <bean id="fua.FormatoFuaService"
-        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-        <property name="transactionManager">
-            <ref bean="transactionManager"/>
-        </property>
-        <property name="target">
-            <bean class="org.openmrs.module.fua.api.impl.FormatoFuaServiceImpl">
-                <property name="dao" ref="fua.FormatoFuaDao"/>
-            </bean>
-        </property>
-        <property name="preInterceptors">
-            <ref bean="serviceInterceptors"/>
-        </property>
-        <property name="transactionAttributeSource">
-            <ref bean="transactionAttributeSource"/>
-        </property>
-    </bean>
-
-    <!-- AGREGAR FORMATOFUASERVICE PARA OpenMRS context -->
-    <bean parent="serviceContext">
-        <property name="moduleService">
-            <list>
-                <value>org.openmrs.module.fua.api.FormatoFuaService</value>
-                <ref bean="fua.FormatoFuaService"/>
-            </list>
-        </property>
-    </bean>
-
     <!-- CONFIGURACION PARA FUAESTADO -->
     <bean id="fua.FuaEstadoService"
         class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
