@@ -10,11 +10,11 @@
 
 <!-- Botón para ir a la gestión de FUA Estado -->
 <div style="margin-bottom: 20px;">
-    <a href="${pageContext.request.contextPath}/module/fua/fuaestado.form">+ Crear o ver estados FUA</a>
+    <a href="${pageContext.request.contextPath}/module/fua/estado/">+ Crear o ver estados FUA</a>
 </div>
 
 <!-- Formulario simple para agregar un nuevo FUA -->
-<form action="fua.form" method="post">
+<form action="${pageContext.request.contextPath}/module/fua" method="post">
     <fieldset>
         <legend><spring:message code="fua.add.title" text="Agregar nuevo FUA" /></legend>
         <table>
@@ -57,7 +57,7 @@
             <td><c:out value="${fua.name}" /></td>
             <td><c:out value="${fua.visitUuid}" /></td>
             <td>
-                <a href="fua.form?fuaId=${fua.id}">Editar</a>
+                <a href="${pageContext.request.contextPath}/module/fua?fuaId=${fua.id}">Editar</a>
             </td>
         </tr>
     </c:forEach>

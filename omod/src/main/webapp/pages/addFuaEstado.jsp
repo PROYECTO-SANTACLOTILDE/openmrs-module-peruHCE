@@ -4,7 +4,7 @@
 <h2><spring:message code="fua.estado.title" text="Estados del FUA" /></h2>
 
 <!-- Formulario simple para agregar o editar un Estado FUA -->
-<form action="fuaestado.form" method="post">
+<form action="${pageContext.request.contextPath}/module/fua/estado" method="post">
     <fieldset>
         <legend><spring:message code="fua.estado.add.title" text="Agregar o Editar Estado del FUA" /></legend>
         <table>

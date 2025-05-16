@@ -37,7 +37,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Controller
-@RequestMapping(value = "/module/fua/fua.form")
+@RequestMapping(value = "/module/fua")
 public class FuaController {
 	
 	protected final Log log = LogFactory.getLog(getClass());
@@ -83,13 +83,13 @@ public class FuaController {
 			fuaService.saveFua(fua);
 			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "fua.saved");
 		}
-		return "redirect:/module/fua/fua.form";
+		return "redirect:/module/fua";
 	}
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public List<Fua> getAllFuas() {
-		log.info("Llamada a /module/fua/fua.form/list");
+		log.info("Llamada a /module/fua/list");
 		return fuaService.getAllFuas();
 	}
 	
@@ -151,7 +151,7 @@ public class FuaController {
 		}
 	}
 
-	@RequestMapping(value = "/updateEstado/{fuaId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/estado/update/{fuaId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<?> actualizarEstadoFua(@PathVariable Integer fuaId, @RequestBody Map<String, Object> body) {
 		try {

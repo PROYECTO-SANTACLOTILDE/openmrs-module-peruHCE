@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/module/fua/fuaestado.form")
+@RequestMapping(value = "/module/fua/estado")
 public class FuaEstadoController {
 
     protected final Log log = LogFactory.getLog(getClass());
@@ -59,13 +59,13 @@ public class FuaEstadoController {
             fuaEstadoService.saveEstado(estado);
             httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "fua.estado.saved");
         }
-        return "redirect:/module/fua/fuaestado.form";
+        return "redirect:/module/fua/estado";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<FuaEstado> getAllEstados() {
-        log.info("Llamada a /module/fua/fuaestado.form/list");
+        log.info("Llamada a /module/fua/estado/list");
         return fuaEstadoService.getAllEstados();
     }
 }
