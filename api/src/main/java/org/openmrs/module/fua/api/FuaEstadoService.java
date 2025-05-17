@@ -16,6 +16,9 @@ public interface FuaEstadoService extends OpenmrsService {
 	@Transactional(readOnly = true)
 	FuaEstado getEstado(Integer id) throws APIException;
 	
+	@Transactional(readOnly = true)
+	FuaEstado getByUuid(String uuid) throws APIException;
+	
 	@Transactional
 	FuaEstado saveEstado(FuaEstado estado) throws APIException;
 	

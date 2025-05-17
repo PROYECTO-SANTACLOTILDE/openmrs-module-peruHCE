@@ -28,8 +28,10 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 	@Column(name = "payload")
 	private String payload;
 	
-	@Column(name = "fua_estado_id", nullable = false)
-	private Integer fuaEstadoId;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "fua_estado_id", nullable = false)
+	private FuaEstado fuaEstado;
+	
 	
 	@Column(name = "fecha_creacion", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -81,19 +83,24 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 		this.payload = payload;
 	}
 	
-	public Integer getFuaEstadoId() {
-		return fuaEstadoId;
+	public FuaEstado getFuaEstado() {
+		return fuaEstado;
 	}
 	
-	public void setFuaEstadoId(Integer fuaEstadoId) {
-		this.fuaEstadoId = fuaEstadoId;
+	public void setFuaEstado(FuaEstado fuaEstado) {
+		this.fuaEstado = fuaEstado;
 	}
 	
 	public Date getFechaCreacion() {
 		return fechaCreacion;
 	}
 	
+	public void setFechaCreacion(Date fechaCreacion) {	///CUIDADO CON ESTO PEDRO
+		this.fechaCreacion = fechaCreacion;
+	}
+
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
 	}
+
 }

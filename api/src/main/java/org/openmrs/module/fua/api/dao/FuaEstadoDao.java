@@ -35,4 +35,9 @@ public class FuaEstadoDao {
 	public void purgeEstado(FuaEstado estado) {
 		getSession().delete(estado);
 	}
+	
+	public FuaEstado getByUuid(String uuid) {
+		return (FuaEstado) getSession().createQuery("FROM FuaEstado fe WHERE fe.uuid = :uuid").setParameter("uuid", uuid)
+		        .uniqueResult();
+	}
 }
