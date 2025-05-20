@@ -3,6 +3,7 @@ package org.openmrs.module.fua.web.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.context.Context;
+import org.openmrs.api.context.UsernamePasswordCredentials;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.fua.FuaEstado;
 import org.openmrs.module.fua.api.FuaEstadoService;
@@ -68,4 +69,17 @@ public class FuaEstadoController {
         log.info("Llamada a /module/fua/estado/list");
         return fuaEstadoService.getAllEstados();
     }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @ResponseBody
+    public FuaEstado createEstado(@RequestBody FuaEstado nuevoEstado) {
+        if (!Context.isAuthenticated()) {
+			UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("admin", "Admin123");
+			Context.authenticate(credentials);
+		}
+        log.info("Creando nuevo FuaEstado con nombre: " + nuevoEstado.getNombre());
+
+        return fuaEstadoService.saveEstado(nuevoEstado);
+    }
+
 }
