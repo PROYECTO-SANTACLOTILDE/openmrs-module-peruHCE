@@ -32,7 +32,6 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 	@JoinColumn(name = "fua_estado_id", nullable = false)
 	private FuaEstado fuaEstado;
 	
-	
 	@Column(name = "fecha_creacion", updatable = false, insertable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaCreacion;
@@ -95,12 +94,12 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 		return fechaCreacion;
 	}
 	
-	public void setFechaCreacion(Date fechaCreacion) {	///CUIDADO CON ESTO PEDRO
+	public void setFechaCreacion(Date fechaCreacion) { ///CUIDADO CON ESTO PEDRO
 		this.fechaCreacion = fechaCreacion;
 	}
-
+	
 	public Date getFechaActualizacion() {
 		return fechaActualizacion;
 	}
-
+	
 }

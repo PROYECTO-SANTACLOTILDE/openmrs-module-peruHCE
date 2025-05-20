@@ -2,6 +2,7 @@ package org.openmrs.module.fua.api.dao;
 
 import org.hibernate.Query;
 import org.openmrs.module.fua.Fua;
+import org.openmrs.module.fua.FuaEstado;
 import org.openmrs.api.db.hibernate.DbSession;
 import org.openmrs.api.db.hibernate.DbSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +41,14 @@ public class FuaDao {
 		getSession().delete(fua);
 	}
 	
-	public void updateEstado(Integer fuaId, Integer nuevoEstadoId) {
+	/*public void updateEstado(Integer fuaId, Integer nuevoEstadoId) {
 		Fua fua = getFua(fuaId);
+		FuaEstado fuaEstado = fuaEstadoService.getEstado(nuevoEstadoId);
 		if (fua != null) {
-			fua.setFuaEstadoId(nuevoEstadoId);
+			fua.setFuaEstado(fuaEstado);
 			saveFua(fua);
 		}
-	}
+	}*/
 	
 	public Fua getFuaByUuid(String uuid) {
 		return (Fua) getSession().createQuery("FROM Fua f WHERE f.uuid = :uuid").setParameter("uuid", uuid).uniqueResult();

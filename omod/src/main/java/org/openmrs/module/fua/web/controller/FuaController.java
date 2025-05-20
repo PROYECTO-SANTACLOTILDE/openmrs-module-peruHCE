@@ -212,12 +212,12 @@ public class FuaController {
 				Context.authenticate(credentials);
 			}
 
-			log.info("Cambiando estado del FUA ID: " + fuaId);
+			/*log.info("Cambiando estado del FUA ID: " + fuaId);
 
 			Fua fua = fuaService.getFua(fuaId);
 			if (fua == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado con ID: " + fuaId);
-			}
+			}*/
 
 			if (!body.containsKey("estadoId")) {
 				return ResponseEntity.badRequest().body("El cuerpo de la solicitud debe incluir 'estadoId'");
@@ -231,9 +231,9 @@ public class FuaController {
 				Double estadoDouble = (Double) body.get("estadoId");
 				nuevoEstadoId = estadoDouble.intValue();
 			}
+			FuaEstado estadoPendiente = fuaEstadoService.getEstado(nuevoEstadoId);
 
-			fua.setFuaEstadoId(nuevoEstadoId);
-			fuaService.saveFua(fua);
+			Fua fua = fuaService.updateEstadoFua(fuaId, estadoPendiente);
 
 			return ResponseEntity.ok(fua);
 		} catch (Exception e) {

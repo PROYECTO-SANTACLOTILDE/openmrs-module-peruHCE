@@ -5,6 +5,8 @@ import org.openmrs.api.APIException;
 //import org.openmrs.api.UserService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.fua.Fua;
+import org.openmrs.module.fua.FuaEstado;
+import org.openmrs.module.fua.api.FuaEstadoService;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.dao.FuaDao;
 
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
+	
+	private FuaEstadoService fuaEstadoService;
 	
 	private FuaDao dao;
 	
@@ -46,13 +50,18 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	}
 	
 	@Override
-	public void updateEstado(Integer fuaId, Integer nuevoEstadoId) throws APIException {
+	public Fua updateEstadoFua(Integer fuaId, FuaEstado nuevoEstado) throws APIException {
 		Fua fua = dao.getFua(fuaId);
+		
 		if (fua == null) {
 			throw new APIException("FUA no encontrado con ID: " + fuaId);
 		}
-		fua.setFuaEstadoId(nuevoEstadoId);
-		dao.saveFua(fua);
+		if (nuevoEstado == null) {
+			throw new APIException("Estado FUA no encontrado con ID: " + nuevoEstado.getId());
+		}
+		
+		fua.setFuaEstado(nuevoEstado);
+		return dao.saveFua(fua);
 	}
 	
 	public Fua getFuaByUuid(String uuid) throws APIException {

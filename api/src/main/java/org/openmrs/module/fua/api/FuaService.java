@@ -4,6 +4,7 @@ import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.fua.Fua;
+import org.openmrs.module.fua.FuaEstado;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public interface FuaService extends OpenmrsService {
 	
 	@Authorized()
 	@Transactional
-	void updateEstado(Integer fuaId, Integer nuevoEstadoId) throws APIException;
+	Fua updateEstadoFua(Integer fuaId, FuaEstado nuevoEstado) throws APIException;
 	
 	@Transactional(readOnly = true)
 	Fua getFuaByUuid(String uuid) throws APIException;
