@@ -18,4 +18,12 @@ import org.springframework.stereotype.Component;
 public class FuaConfig {
 	
 	public final static String MODULE_PRIVILEGE = "Fua Privilege";
+	
+	public final static String READ_FUA_PRIVILEGE = "Read Fua Privilege";
+	
+	public final static String MANAGE_FUA_PRIVILEGE = "Manage Fua Privilege";
+	
+	public final static String DELETE_FUA_PRIVILEGE = "Delete Fua Privilege";
+	
+	public final static String UPDATE_FUA_PRIVILEGE = "Update Fua Privilege";
 }
