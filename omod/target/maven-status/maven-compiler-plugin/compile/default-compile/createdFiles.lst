@@ -1,0 +1,2 @@
+org\openmrs\module\fua\web\controller\FuaController.class
+org\openmrs\module\fua\web\controller\FuaEstadoController.class

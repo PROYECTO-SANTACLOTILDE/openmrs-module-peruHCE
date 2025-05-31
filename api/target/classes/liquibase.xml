@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Tabla fua_estado -->
+    <changeSet id="fua_estado-2025-05-15-04" author="pedro">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="fua_estado"/></not>
+        </preConditions>
+        <createTable tableName="fua_estado">
+            <column name="fua_estado_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="nombre" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Tabla Fua --> 
+    <changeSet id="fua-2025-05-15-07" author="pedro">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="fua"/></not>
+        </preConditions>
+        <createTable tableName="fua">
+            <column name="fua_id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uuid" type="char(38)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="visit_uuid" type="char(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payload" type="clob"/>
+            <column name="fua_estado_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_creacion" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_actualizacion" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="fua"
+                                 baseColumnNames="visit_uuid"
+                                 referencedTableName="visit"
+                                 referencedColumnNames="uuid"
+                                 constraintName="fk_fua_visit"/>
+
+        <addForeignKeyConstraint baseTableName="fua"
+                                 baseColumnNames="fua_estado_id"
+                                 referencedTableName="fua_estado"
+                                 referencedColumnNames="fua_estado_id"
+                                 constraintName="fk_fua_estado"/>
+    </changeSet>
+
+    <!-- Trigger para actualizar fecha_actualizacion -->
+    <changeSet id="trigger_fua_fechaActualizacion-2025-05-15-01" author="pedro" dbms="mysql">
+        <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE</comment>
+        <sql>
+            CREATE TRIGGER trg_fua_update_timestamp
+            BEFORE UPDATE ON fua
+            FOR EACH ROW
+            SET NEW.fecha_actualizacion = CURRENT_TIMESTAMP;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

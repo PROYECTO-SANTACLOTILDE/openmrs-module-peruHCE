@@ -1,0 +1,10 @@
+org\openmrs\module\fua\api\FuaEstadoService.class
+org\openmrs\module\fua\Fua.class
+org\openmrs\module\fua\FuaConfig.class
+org\openmrs\module\fua\api\impl\FuaServiceImpl.class
+org\openmrs\module\fua\api\FuaService.class
+org\openmrs\module\fua\api\dao\FuaEstadoDao.class
+org\openmrs\module\fua\api\dao\FuaDao.class
+org\openmrs\module\fua\FuaActivator.class
+org\openmrs\module\fua\api\impl\FuaEstadoServiceImpl.class
+org\openmrs\module\fua\FuaEstado.class
