@@ -42,6 +42,30 @@
 	</privilege>
 	 /Required Privileges -->
 
+	<privilege>
+		<name>Fua Privilege</name>
+		<description>Allows user to access general FUA module functions</description>
+	</privilege>
+
+	<privilege>
+		<name>Read Fua</name>
+		<description>Allows user to view FUA records</description>
+	</privilege>
+
+	<privilege>
+		<name>Manage Fua</name>
+		<description>Allows user to create and manage FUA records</description>
+	</privilege>
+
+	<privilege>
+		<name>Delete Fua</name>
+		<description>Allows user to delete FUA records</description>
+	</privilege>
+
+	<privilege>
+		<name>Update Fua</name>
+		<description>Allows user to update FUA records</description>
+	</privilege>
 
 	<!-- Required Global Properties 
 	<globalProperty>
