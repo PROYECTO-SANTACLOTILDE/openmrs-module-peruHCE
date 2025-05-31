@@ -3,10 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.openmrs.module</groupId>
-    <artifactId>fua</artifactId>
-    <version>1.0.16</version>
-  </parent>
+		<groupId>org.openmrs.module</groupId>
+		<artifactId>fua</artifactId>
+		<version>1.0.16</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
 
   <artifactId>fua-omod</artifactId>
   <packaging>jar</packaging>
