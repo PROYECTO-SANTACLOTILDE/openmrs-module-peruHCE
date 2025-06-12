@@ -54,6 +54,12 @@ public class FuaDao {
 		return (Fua) getSession().createQuery("FROM Fua f WHERE f.uuid = :uuid").setParameter("uuid", uuid).uniqueResult();
 	}
 	
+	public Fua getFuaByVisitUuid(String visitUuid) {
+		return (Fua) getSession()
+		        .createQuery("FROM Fua f WHERE f.visitUuid = :visitUuid ORDER BY f.fechaActualizacion DESC")
+		        .setParameter("visitUuid", visitUuid).setMaxResults(1).uniqueResult();
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Fua> getFuasFiltrados(String estadoNombre, LocalDate fechaInicio, LocalDate fechaFin, int offset, int limit) {
 		String hql = "SELECT f FROM Fua f";

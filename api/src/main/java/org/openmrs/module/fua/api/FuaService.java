@@ -39,6 +39,10 @@ public interface FuaService extends OpenmrsService {
 	
 	@Authorized(FuaConfig.READ_FUA_PRIVILEGE)
 	@Transactional(readOnly = true)
+	Fua getFuaByVisitUuid(String visitUuid) throws APIException;
+	
+	@Authorized(FuaConfig.READ_FUA_PRIVILEGE)
+	@Transactional(readOnly = true)
 	List<Fua> getFuasFiltrados(String estado, LocalDate inicio, LocalDate fin, int page, int size);
 	
 }

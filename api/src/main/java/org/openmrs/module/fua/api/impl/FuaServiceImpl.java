@@ -68,6 +68,10 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 		return dao.getFuaByUuid(uuid);
 	}
 	
+	public Fua getFuaByVisitUuid(String visitUuid) throws APIException {
+		return dao.getFuaByVisitUuid(visitUuid);
+	}
+	
 	@Override
 	public List<Fua> getFuasFiltrados(String estado, LocalDate inicio, LocalDate fin, int page, int size) {
 		int offset = (page - 1) * size;

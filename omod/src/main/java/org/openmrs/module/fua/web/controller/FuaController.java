@@ -1,5 +1,6 @@
 package org.openmrs.module.fua.web.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,6 +114,38 @@ public class FuaController {
 
 		return ResponseEntity.ok(fua);
 	}
+
+	@RequestMapping(value = "/visituuid/{visitUuid}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> getFuaByVisitUuid(@PathVariable("visitUuid") String visitUuid) {
+		Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+
+		if (fua == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado para visitUuid: " + visitUuid);
+		}
+
+		return ResponseEntity.ok(fua);
+	}
+
+	@RequestMapping(value = "/visitInfo/{visitUuid}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> getPayloadInfoByVisitUuid(@PathVariable("visitUuid") String visitUuid) {
+		Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+
+		if (fua == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body("FUA no encontrado para visitUuid: " + visitUuid);
+		}
+
+		// Construir el objeto de respuesta
+		Map<String, String> response = new HashMap<>();
+		response.put("payload", fua.getPayload() != null ? fua.getPayload() : "");
+		response.put("token", "---");
+		response.put("format", "---");
+
+		return ResponseEntity.ok(response);
+	}
+
 
 	@RequestMapping(value = "/solicitudes", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
