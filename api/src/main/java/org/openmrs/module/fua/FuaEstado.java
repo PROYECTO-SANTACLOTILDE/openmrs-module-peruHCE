@@ -1,5 +1,6 @@
 package org.openmrs.module.fua;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.BaseOpenmrsObject;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "fua_estado")
-public class FuaEstado extends BaseOpenmrsObject implements Serializable {
+public class FuaEstado extends BaseOpenmrsData {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

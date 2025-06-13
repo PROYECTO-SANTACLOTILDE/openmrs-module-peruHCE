@@ -1,6 +1,7 @@
 package org.openmrs.module.fua;
 
 import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.BaseOpenmrsData;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "fua")
-public class Fua extends BaseOpenmrsObject implements Serializable {
+public class Fua extends BaseOpenmrsData {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

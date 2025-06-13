@@ -6,7 +6,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Tabla fua_estado -->
-    <changeSet id="fua_estado-2025-05-15-04" author="pedro">
+    <changeSet id="fua_estado-2025-06-12-02" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_estado"/></not>
         </preConditions>
@@ -20,11 +20,29 @@
             <column name="nombre" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+
+            <!-- PRUEBA DE LOS OPENMRSOBJECTDATA -->
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)" defaultValue="null"/>
+            <!-- FIN DE PRUEBA DE LOS OPENMRSOBJECTDATA -->
+
         </createTable>
     </changeSet>
 
     <!-- Tabla Fua --> 
-    <changeSet id="fua-2025-05-15-07" author="pedro">
+    <changeSet id="fua-2025-06-12-02" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua"/></not>
         </preConditions>
@@ -51,7 +69,26 @@
             <column name="fecha_actualizacion" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
+
+            <!-- PRUEBA DE LOS OPENMRSOBJECTDATA -->
+            <column name="creator" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_created" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="changed_by" type="int"/>
+            <column name="date_changed" type="datetime"/>
+            <column name="voided" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="voided_by" type="int"/>
+            <column name="date_voided" type="datetime"/>
+            <column name="void_reason" type="varchar(255)" defaultValue="null"/>
+            <!-- FIN DE PRUEBA DE LOS OPENMRSOBJECTDATA -->
+
         </createTable>
+        
 
         <addForeignKeyConstraint baseTableName="fua"
                                  baseColumnNames="visit_uuid"
@@ -64,6 +101,26 @@
                                  referencedTableName="fua_estado"
                                  referencedColumnNames="fua_estado_id"
                                  constraintName="fk_fua_estado"/>
+
+        <addForeignKeyConstraint constraintName="fua_estado_creator"
+                                 baseTableName="fua_estado" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="fua_estado_changed_by"
+                                 baseTableName="fua_estado" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="fua_estado_voided_by"
+                                 baseTableName="fua_estado" baseColumnNames="voided_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        
+        <addForeignKeyConstraint constraintName="fua_creator"
+                                 baseTableName="fua" baseColumnNames="creator"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="fua_changed_by"
+                                 baseTableName="fua" baseColumnNames="changed_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
+        <addForeignKeyConstraint constraintName="fua_voided_by"
+                                 baseTableName="fua" baseColumnNames="voided_by"
+                                 referencedTableName="users" referencedColumnNames="user_id"/>
     </changeSet>
 
     <!-- Trigger para actualizar fecha_actualizacion -->
