@@ -103,7 +103,7 @@ public class FuaController {
 		return fuaService.getAllFuas();
 	}
 
-	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/uuid/{uuid}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<?> getFuaByUuid(@PathVariable("uuid") String uuid) {
 		Fua fua = fuaService.getFuaByUuid(uuid);
@@ -122,6 +122,18 @@ public class FuaController {
 
 		if (fua == null) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado para visitUuid: " + visitUuid);
+		}
+
+		return ResponseEntity.ok(fua);
+	}
+
+	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> getFuaById(@PathVariable("id") Integer id) {
+		Fua fua = fuaService.getFuaById(id);
+
+		if (fua == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado por el Id: " + id);
 		}
 
 		return ResponseEntity.ok(fua);
