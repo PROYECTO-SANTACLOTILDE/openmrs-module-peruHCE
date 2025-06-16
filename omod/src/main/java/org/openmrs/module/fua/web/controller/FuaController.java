@@ -1,5 +1,7 @@
 package org.openmrs.module.fua.web.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Visit;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.context.UsernamePasswordCredentials;
 import org.openmrs.messagesource.MessageSourceService;
@@ -17,12 +20,8 @@ import org.openmrs.module.fua.api.FuaEstadoService;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -33,14 +32,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpSession;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+
+
+import org.openmrs.module.fua.dto.VisitDto;
+
 
 @Controller
 @RequestMapping(value = "/module/fua")
@@ -195,58 +195,61 @@ public class FuaController {
 	
 	// Nuevo endpoint
 	@RequestMapping(value = "/generateFromVisit/{visitUuid}", method = RequestMethod.POST, produces = "application/json")
-	@ResponseBody
-	public ResponseEntity<?> generateFuaFromVisit(@PathVariable String visitUuid) {
-		try {
-			log.info("Generando FUA desde visita UUID: " + visitUuid);
+    @ResponseBody
+    public ResponseEntity<?> generateFuaFromVisit(@PathVariable String visitUuid) {
+        try {
+            log.info("Generando FUA desde visita UUID: " + visitUuid);
 
-			String url = "http://localhost:8080/openmrs/ws/rest/v1/visit/" + visitUuid + "?v=full";
+            // Asegurar que esté autenticado (por si se llama fuera del contexto habitual)
+            if (!Context.isAuthenticated()) {
+                UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("admin", "Admin123");
+				Context.authenticate(credentials);
+            }
 
-			// Autenticación segura desde runtime.properties
-			String username = "admin";//Context.getAdministrationService().getGlobalProperty("fua.rest.username");
-			String password = "Admin123";//Context.getAdministrationService().getGlobalProperty("fua.rest.password");
+            Visit visit = Context.getVisitService().getVisitByUuid(visitUuid);
+            if (visit == null) {
+                log.warn("No se encontró la visita con UUID: " + visitUuid);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Visita no encontrada.");
+            }
 
-			if (username == null || password == null) {
-				log.error("Credenciales de REST no configuradas.");
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Credenciales REST no configuradas.");
-			}
+            // Convertir objeto Visit a JSON usando Jackson
+            
+			VisitDto visitDto = new VisitDto(visit);
+			String payload = new ObjectMapper().writeValueAsString(visitDto);
+			
+			/*
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+			mapper.enable(SerializationFeature.INDENT_OUTPUT);
+			mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+			mapper.configure(SerializationFeature.FAIL_ON_SELF_REFERENCES, false);
+			
+			mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+			mapper.registerModule(new Hibernate5Module().disable(Hibernate5Module.Feature.USE_TRANSIENT_ANNOTATION));
 
-			HttpHeaders headers = new HttpHeaders();
-			headers.setBasicAuth(username, password);
-			HttpEntity<String> entity = new HttpEntity<>(headers);
+			String payload = mapper.writeValueAsString(visit);
+			*/
 
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+            FuaEstado estadoPendiente = fuaEstadoService.getEstado(1); // Estado inicial: Pendiente
 
-			if (!response.getStatusCode().is2xxSuccessful()) {
-				log.warn("No se pudo obtener la visita con UUID: " + visitUuid);
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo obtener la visita.");
-			}
+            Fua fua = new Fua();
+            fua.setName("FUA generado desde visita UUID: " + visitUuid);
+            fua.setVisitUuid(visitUuid);
+            fua.setPayload(payload);
+            fua.setFuaEstado(estadoPendiente);
 
-			String payload = response.getBody();
+            fuaService.saveFua(fua);
 
-			FuaEstado estadoPendiente = fuaEstadoService.getEstado(1);
+            log.info("FUA generado exitosamente desde visita UUID: " + visitUuid);
+            return ResponseEntity.ok(fua);
 
-			Fua fua = new Fua();
-			fua.setName("PRUEBA DE generateFuaFromVisit");
-			fua.setVisitUuid(visitUuid);
-			fua.setPayload(payload);
-			fua.setFuaEstado(estadoPendiente);
+        } catch (Exception e) {
+            log.error("Error inesperado al generar FUA desde visita: " + visitUuid, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al generar el FUA: " + e.getMessage());
+        }
+    }
 
-			fuaService.saveFua(fua);
-
-			log.info("FUA generado exitosamente desde visita UUID: " + visitUuid);
-			return ResponseEntity.ok(fua);
-
-		} catch (HttpClientErrorException | HttpServerErrorException ex) {
-			log.error("Error HTTP al obtener visita: " + ex.getStatusCode(), ex);
-			return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsString());
-		} catch (Exception e) {
-			log.error("Error inesperado al generar FUA desde visita: " + visitUuid, e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			        .body("Error al generar el FUA: " + e.getMessage());
-		}
-	}
 
 	@RequestMapping(value = "/estado/update/{fuaId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
 	@ResponseBody
