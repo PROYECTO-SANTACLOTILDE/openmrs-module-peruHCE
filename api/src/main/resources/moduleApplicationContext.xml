@@ -35,8 +35,6 @@
         <property name="target">
             <bean class="org.openmrs.module.fua.api.impl.FuaServiceImpl">
                 <property name="dao" ref="fua.FuaDao" />
-                <property name="fuaVersionService" ref="fua.FuaVersionService" />
-                <property name="fuaEstadoService" ref="fua.FuaEstadoService" />
             </bean>
         </property>
         <property name="preInterceptors">

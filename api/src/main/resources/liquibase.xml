@@ -173,7 +173,7 @@
     </changeSet>
 
     <!-- Trigger para actualizar fecha_actualizacion -->
-    <changeSet id="trigger_fua_fechaActualizacion-2025-06-13-01" author="pedro" dbms="mysql">
+    <changeSet id="trigger_fua_fechaActualizacion-2025-06-19-01" author="pedro" dbms="mysql">
         <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE</comment>
         <sql>
             CREATE TRIGGER trg_fua_update_timestamp

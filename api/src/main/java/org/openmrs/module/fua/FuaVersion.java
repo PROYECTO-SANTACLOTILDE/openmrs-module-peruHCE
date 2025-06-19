@@ -5,7 +5,7 @@ import org.openmrs.BaseOpenmrsObject;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import org.openmrs.module.fua.Fua;
+import java.util.UUID;
 
 @Entity
 @Table(name = "fua_version")
@@ -60,6 +60,7 @@ public class FuaVersion extends BaseOpenmrsObject implements Serializable {
 	}
 	
 	public FuaVersion(Fua fua) {
+		this.uuid = UUID.randomUUID().toString();
 		this.fuaId = fua.getId();
 		this.fuaUuid = fua.getUuid();
 		this.visitUuid = fua.getVisitUuid();

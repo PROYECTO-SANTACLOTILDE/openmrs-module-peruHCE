@@ -15,6 +15,7 @@ import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.FuaEstado;
 import org.openmrs.module.fua.api.FuaEstadoService;
 import org.openmrs.module.fua.api.FuaService;
+import org.openmrs.module.fua.api.FuaVersionService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,6 +40,9 @@ import org.springframework.web.client.RestTemplate;
 
 import liquibase.pro.packaged.f;
 
+import org.openmrs.module.fua.FuaVersion;
+import org.openmrs.module.fua.api.FuaVersionService;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -53,6 +57,9 @@ public class FuaController {
 
 	@Autowired
 	private FuaEstadoService fuaEstadoService;
+
+	@Autowired
+	private FuaVersionService fuaVersionService;
 	
 	/*@Autowired
 	private UserService userService;*/
@@ -246,8 +253,8 @@ public class FuaController {
 				System.out.println("	ID: " + fua.getId());
 			}
 			else{
+				fuaVersionService.saveFuaVersion(fua, "GenerateFromVisit");
 				fua.setPayload(payload);
-				fua.setVersion(fua.getVersion() +1);
 				System.out.println("///////////////EL FUA NO ES NULL///////////////////////////////////////////////: " + fua);
 			}
 			
@@ -308,9 +315,15 @@ public class FuaController {
 				Double estadoDouble = (Double) body.get("estadoId");
 				nuevoEstadoId = estadoDouble.intValue();
 			}
-			FuaEstado estadoPendiente = fuaEstadoService.getEstado(nuevoEstadoId);
+			
+			Fua fua = fuaService.getFuaById(fuaId);
+			fuaVersionService.saveFuaVersion(fua, "Update estado de FUA");
 
-			Fua fua = fuaService.updateEstadoFua(fuaId, estadoPendiente);
+			FuaEstado estadoPendiente = fuaEstadoService.getEstado(nuevoEstadoId);
+			
+			fua.setFuaEstado(estadoPendiente);
+			fuaService.saveFua(fua);
+
 
 			return ResponseEntity.ok(fua);
 		} catch (Exception e) {
