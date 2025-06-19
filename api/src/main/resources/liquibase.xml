@@ -6,7 +6,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Tabla fua_estado -->
-    <changeSet id="fua_estado-2025-06-18-01" author="pedro">
+    <changeSet id="fua_estado-2025-06-19-03" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_estado"/></not>
         </preConditions>
@@ -20,6 +20,12 @@
             <column name="nombre" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="fecha_creacion" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_actualizacion" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
             <column name="version" type="int" defaultValueNumeric="1">
                 <constraints nullable="false"/>
             </column>
@@ -30,7 +36,7 @@
     </changeSet>
 
     <!-- Tabla fua -->
-    <changeSet id="fua-2025-06-18-01" author="pedro">
+    <changeSet id="fua-2025-06-19-03" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua"/></not>
         </preConditions>
@@ -79,7 +85,7 @@
     </changeSet>
 
     <!-- Tabla fua_version -->
-    <changeSet id="fua_version-2025-06-18-01" author="pedro">
+    <changeSet id="fua_version-2025-06-19-03" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_version"/></not>
         </preConditions>
@@ -142,7 +148,7 @@
 
 
     <!-- Tabla fua_estado_version -->
-    <changeSet id="fua_estado_version-2025-06-18-01" author="pedro">
+    <changeSet id="fua_estado_version-2025-06-19-03" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_estado_version"/></not>
         </preConditions>
@@ -162,7 +168,13 @@
             <column name="nombre" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="descripcion" type="varchar(100)"/>
+            <column name="descripcion" type="varchar(255)"/>
+            <column name="fecha_creacion" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fecha_actualizacion" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
             <column name="version" type="int">
                 <constraints nullable="false"/>
             </column>
@@ -170,11 +182,18 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+
+        <addForeignKeyConstraint baseTableName="fua_estado_version"
+                                baseColumnNames="fua_estado_id"
+                                referencedTableName="fua_estado"
+                                referencedColumnNames="fua_estado_id"
+                                constraintName="fk_fua_estado_version_estado"/>
     </changeSet>
 
     <!-- Trigger para actualizar fecha_actualizacion -->
-    <changeSet id="trigger_fua_fechaActualizacion-2025-06-19-01" author="pedro" dbms="mysql">
-        <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE</comment>
+    <changeSet id="trigger_fua_fechaActualizacion-2025-06-19-04" author="pedro" dbms="mysql">
+        <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE en fua</comment>
         <sql>
             CREATE TRIGGER trg_fua_update_timestamp
             BEFORE UPDATE ON fua
@@ -182,5 +201,17 @@
             SET NEW.fecha_actualizacion = CURRENT_TIMESTAMP;
         </sql>
     </changeSet>
+
+    <!-- Trigger para actualizar fecha_actualizacion en fua_estado -->
+    <changeSet id="trigger_fua_estado_fechaActualizacion-2025-06-19-03" author="pedro" dbms="mysql">
+        <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE en fua_estado</comment>
+        <sql>
+            CREATE TRIGGER trg_fua_estado_update_timestamp
+            BEFORE UPDATE ON fua_estado
+            FOR EACH ROW
+            SET NEW.fecha_actualizacion = CURRENT_TIMESTAMP;
+        </sql>
+    </changeSet>
+
 
 </databaseChangeLog>

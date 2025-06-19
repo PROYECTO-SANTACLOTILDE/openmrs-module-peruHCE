@@ -4,6 +4,7 @@ import org.openmrs.BaseOpenmrsObject;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "fua_estado")
@@ -19,6 +20,14 @@ public class FuaEstado extends BaseOpenmrsObject implements Serializable {
 	
 	@Column(name = "nombre", nullable = false, length = 255)
 	private String nombre;
+	
+	@Column(name = "fecha_creacion", updatable = false, insertable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaCreacion;
+	
+	@Column(name = "fecha_actualizacion", insertable = false, updatable = false)
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date fechaActualizacion;
 	
 	@Column(name = "version", nullable = false, insertable = false)
 	private Integer version;
@@ -65,6 +74,18 @@ public class FuaEstado extends BaseOpenmrsObject implements Serializable {
 	
 	public void setActivo(Boolean activo) {
 		this.activo = activo;
+	}
+	
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
+	
+	public void setFechaCreacion(Date fechaCreacion) { ///CUIDADO CON ESTO PEDRO
+		this.fechaCreacion = fechaCreacion;
+	}
+	
+	public Date getFechaActualizacion() {
+		return fechaActualizacion;
 	}
 	
 }
