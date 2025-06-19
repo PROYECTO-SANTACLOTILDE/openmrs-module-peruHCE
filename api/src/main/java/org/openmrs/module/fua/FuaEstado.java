@@ -20,6 +20,12 @@ public class FuaEstado extends BaseOpenmrsObject implements Serializable {
 	@Column(name = "nombre", nullable = false, length = 255)
 	private String nombre;
 	
+	@Column(name = "version", nullable = false, insertable = false)
+	private Integer version;
+	
+	@Column(name = "activo", nullable = false, insertable = false)
+	private Boolean activo;
+	
 	// Getters y Setters
 	public Integer getId() {
 		return id;
@@ -44,4 +50,21 @@ public class FuaEstado extends BaseOpenmrsObject implements Serializable {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	
+	public Integer getVersion() {
+		return version;
+	}
+	
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	public Boolean getActivo() {
+		return activo;
+	}
+	
+	public void setActivo(Boolean activo) {
+		this.activo = activo;
+	}
+	
 }

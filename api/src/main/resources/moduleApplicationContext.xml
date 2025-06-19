@@ -35,6 +35,8 @@
         <property name="target">
             <bean class="org.openmrs.module.fua.api.impl.FuaServiceImpl">
                 <property name="dao" ref="fua.FuaDao" />
+                <property name="fuaVersionService" ref="fua.FuaVersionService" />
+                <property name="fuaEstadoService" ref="fua.FuaEstadoService" />
             </bean>
         </property>
         <property name="preInterceptors">
@@ -81,6 +83,37 @@
             <list>
                 <value>org.openmrs.module.fua.api.FuaEstadoService</value>
                 <ref bean="fua.FuaEstadoService"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <!-- CONFIGURACIÓN PARA FUAVERSION -->
+    <bean id="fua.FuaVersionService"
+        class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+        <property name="transactionManager">
+            <ref bean="transactionManager"/>
+        </property>
+        <property name="target">
+            <bean class="org.openmrs.module.fua.api.impl.FuaVersionServiceImpl">
+                <property name="dao" ref="fua.FuaVersionDao" />
+            </bean>
+        </property>
+        <property name="preInterceptors">
+            <ref bean="serviceInterceptors"/>
+        </property>
+        <property name="transactionAttributeSource">
+            <ref bean="transactionAttributeSource"/>
+        </property>
+    </bean>
+
+
+    <!-- AGREGAR FUAVERSIONSERVICE PARA OpenMRS context -->
+    <bean parent="serviceContext">
+        <property name="moduleService">
+            <list>
+                <value>org.openmrs.module.fua.api.FuaVersionService</value>
+                <ref bean="fua.FuaVersionService"/>
             </list>
         </property>
     </bean>

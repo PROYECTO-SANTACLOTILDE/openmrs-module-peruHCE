@@ -37,10 +37,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpSession;
+import liquibase.pro.packaged.f;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/module/fua")
@@ -198,6 +198,7 @@ public class FuaController {
 	@ResponseBody
 	public ResponseEntity<?> generateFuaFromVisit(@PathVariable String visitUuid) {
 		try {
+			
 			log.info("Generando FUA desde visita UUID: " + visitUuid);
 
 			String url = "http://localhost:8080/openmrs/ws/rest/v1/visit/" + visitUuid + "?v=full";
@@ -227,11 +228,42 @@ public class FuaController {
 
 			FuaEstado estadoPendiente = fuaEstadoService.getEstado(1);
 
-			Fua fua = new Fua();
-			fua.setName("PRUEBA DE generateFuaFromVisit");
-			fua.setVisitUuid(visitUuid);
-			fua.setPayload(payload);
-			fua.setFuaEstado(estadoPendiente);
+			//HASTA ACA NO SE CAMBIA NADA
+
+			Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+
+			if (fua == null) {
+				fua = new Fua();
+				
+				fua.setName("PRUEBA DE generateFuaFromVisit");
+				fua.setVisitUuid(visitUuid);
+				fua.setPayload(payload);
+				fua.setFuaEstado(estadoPendiente);
+				System.out.println("///////////////EL FUA ES NULL///////////////////////////////////////////////: " + fua);
+				System.out.println("	EL FUA ES NUEVO:");
+				System.out.println("	UUID: " + fua.getUuid());
+				System.out.println("	ESTADO: " + fua.getFuaEstado());
+				System.out.println("	ID: " + fua.getId());
+			}
+			else{
+				fua.setPayload(payload);
+				fua.setVersion(fua.getVersion() +1);
+				System.out.println("///////////////EL FUA NO ES NULL///////////////////////////////////////////////: " + fua);
+			}
+			
+			System.out.println("===== DETALLES DEL FUA =====");
+			System.out.println("ID: " + fua.getId());
+			System.out.println("UUID: " + fua.getUuid());
+			System.out.println("Visit UUID: " + fua.getVisitUuid());
+			System.out.println("Name: " + fua.getName());
+			System.out.println("Payload: Siempre tiene algo xd");
+			System.out.println("Estado: " + (fua.getFuaEstado() != null ? fua.getFuaEstado().getNombre() : "null")); // Asumiendo que FuaEstado tiene getNombre()
+			System.out.println("Fecha de creación: " + fua.getFechaCreacion());
+			System.out.println("Fecha de actualización: " + fua.getFechaActualizacion());
+			System.out.println("Versión: " + fua.getVersion());
+			System.out.println("Activo: " + fua.getActivo());
+			System.out.println("==================================");
+
 
 			fuaService.saveFua(fua);
 

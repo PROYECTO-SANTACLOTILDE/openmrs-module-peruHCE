@@ -6,7 +6,9 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.FuaEstado;
+import org.openmrs.module.fua.FuaVersion;
 import org.openmrs.module.fua.api.FuaEstadoService;
+import org.openmrs.module.fua.api.FuaVersionService;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.dao.FuaDao;
 
@@ -20,10 +22,20 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	
 	private FuaEstadoService fuaEstadoService;
 	
+	private FuaVersionService fuaVersionService;
+	
 	private FuaDao dao;
 	
 	public void setDao(FuaDao dao) {
 		this.dao = dao;
+	}
+	
+	public void setFuaVersionService(FuaVersionService fuaVersionService) {
+		this.fuaVersionService = fuaVersionService;
+	}
+	
+	public void setFuaEstadoService(FuaEstadoService fuaEstadoService) {
+		this.fuaEstadoService = fuaEstadoService;
 	}
 	
 	@Override
@@ -38,9 +50,13 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	
 	@Override
 	public Fua saveFua(Fua fua) throws APIException {
-		if (StringUtils.isBlank(fua.getUuid())) {
-			fua.setUuid(UUID.randomUUID().toString());
+		if (fua.getId() != null) {
+			FuaVersion fuaVersion = new FuaVersion(fua);
+			fuaVersionService.saveFuaVersion(fuaVersion, "Prueba GenerateFromVisit");
+			System.out.println("		EL ID DEL FUA NO ES NULL, ASI QUE SE GENERA UNA COPIA DEL FUA");
+			System.out.println("			UUID: " + fua.getUuid());
 		}
+		
 		return dao.saveFua(fua);
 	}
 	
