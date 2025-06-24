@@ -24,6 +24,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -37,12 +38,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriUtils;
 
 import liquibase.pro.packaged.f;
 
 import org.openmrs.module.fua.FuaVersion;
 import org.openmrs.module.fua.api.FuaVersionService;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -122,17 +125,61 @@ public class FuaController {
 		return ResponseEntity.ok(fua);
 	}
 
-	@RequestMapping(value = "/visituuid/{visitUuid}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(
+			value = "/visitInfo/{visitUuid}",
+			method = RequestMethod.POST,              // ← POST porque enviamos body
+			consumes = "application/json",
+			produces = "text/html")                   // ← devolvemos HTML
 	@ResponseBody
-	public ResponseEntity<?> getFuaByVisitUuid(@PathVariable("visitUuid") String visitUuid) {
-		Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+	public ResponseEntity<?> renderVisitInfo(
+			@PathVariable String visitUuid,
+			@RequestBody Map<String, Object> body) {
 
-		if (fua == null) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado para visitUuid: " + visitUuid);
+		try {
+			// Validamos que venga “identifier”
+			if (!body.containsKey("identifier")) {
+				return ResponseEntity.badRequest()
+						.body("El cuerpo de la solicitud debe incluir 'identifier'");
+			}
+			// Podría llegar como String o como cualquier otra representación
+			String identifier = String.valueOf(body.get("identifier")).trim();
+
+			// Buscamos el FUA
+			Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+			if (fua == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("FUA no encontrado para visitUuid: " + visitUuid);
+			}
+
+			// Construimos el JSON que exige el microservicio
+			Map<String, String> payloadMap = new HashMap<>();
+			payloadMap.put("payload", fua.getPayload() != null ? fua.getPayload() : "");
+			payloadMap.put("token", "---");
+			payloadMap.put("format", "---");
+
+			// Llamamos al microservicio http://localhost:3000/ws/FUAFormat/{identifier}/render
+			String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
+					+ UriUtils.encodePath(identifier, StandardCharsets.UTF_8)
+					+ "/render";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			HttpEntity<Map<String, String>> entity = new HttpEntity<>(payloadMap, headers);
+
+			RestTemplate restTemplate = new RestTemplate();
+			ResponseEntity<String> remoteResp = restTemplate.postForEntity(remoteUrl, entity, String.class);
+
+			// Devolvemos el HTML que recibimos
+			return ResponseEntity.status(remoteResp.getStatusCode())
+					.contentType(MediaType.TEXT_HTML)
+					.body(remoteResp.getBody());
+
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+					.body("Error procesando la solicitud: " + ex.getMessage());
 		}
-
-		return ResponseEntity.ok(fua);
 	}
+
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
