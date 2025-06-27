@@ -1,6 +1,7 @@
 package org.openmrs.module.fua.web.controller;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -48,6 +50,13 @@ import org.openmrs.module.fua.api.FuaVersionService;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;   // ← la excepción
+import org.apache.commons.lang3.StringUtils;
+
+
 
 @Controller
 @RequestMapping(value = "/module/fua")
@@ -126,50 +135,59 @@ public class FuaController {
 	}
 
 	@RequestMapping(
-			value = "/visitInfo/{visitUuid}",
-			method = RequestMethod.POST,              // ← POST porque enviamos body
-			consumes = "application/json",
-			produces = "text/html")                   // ← devolvemos HTML
+			value    = "/visitInfo/{visitUuid}/generator/{identifier}",
+			method   = RequestMethod.GET,
+			produces = "text/html")       // devolvemos HTML
 	@ResponseBody
 	public ResponseEntity<?> renderVisitInfo(
 			@PathVariable String visitUuid,
-			@RequestBody Map<String, Object> body) {
+			@PathVariable String identifier) {
 
 		try {
-			// Validamos que venga “identifier”
-			if (!body.containsKey("identifier")) {
-				return ResponseEntity.badRequest()
-						.body("El cuerpo de la solicitud debe incluir 'identifier'");
-			}
-			// Podría llegar como String o como cualquier otra representación
-			String identifier = String.valueOf(body.get("identifier")).trim();
-
-			// Buscamos el FUA
+			/* 1. Buscamos el FUA ------------------------------------------------ */
 			Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
 			if (fua == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND)
 						.body("FUA no encontrado para visitUuid: " + visitUuid);
 			}
 
-			// Construimos el JSON que exige el microservicio
-			Map<String, String> payloadMap = new HashMap<>();
-			payloadMap.put("payload", fua.getPayload() != null ? fua.getPayload() : "");
-			payloadMap.put("token", "---");
-			payloadMap.put("format", "---");
+			/* 2. Pasamos payload de String → JSON ------------------------------ */
+			ObjectMapper mapper  = new ObjectMapper();
+			JsonNode payloadJson;
+			try {
+				payloadJson = StringUtils.isBlank(fua.getPayload())
+						? mapper.createObjectNode()
+						: mapper.readTree(fua.getPayload());
 
-			// Llamamos al microservicio http://localhost:3000/ws/FUAFormat/{identifier}/render
+			} catch (JsonProcessingException ex) {
+				// Si no es JSON válido, lo mandamos como texto
+				payloadJson = mapper.getNodeFactory().textNode(fua.getPayload());
+			}
+
+			/* 3. Construimos el body para el microservicio --------------------- */
+			Map<String, Object> requestBody = new LinkedHashMap<>();
+			requestBody.put("payload", payloadJson);
+			requestBody.put("token",   "---");
+			requestBody.put("format",  "---");
+
+			/* 4. Llamamos al microservicio ------------------------------------- */
 			String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
 					+ UriUtils.encodePath(identifier, StandardCharsets.UTF_8)
 					+ "/render";
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<Map<String, String>> entity = new HttpEntity<>(payloadMap, headers);
 
-			RestTemplate restTemplate = new RestTemplate();
-			ResponseEntity<String> remoteResp = restTemplate.postForEntity(remoteUrl, entity, String.class);
+			HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+			RestTemplate restTemplate = new RestTemplate(
+					new HttpComponentsClientHttpRequestFactory()); // ← permite body en GET
 
-			// Devolvemos el HTML que recibimos
+			ResponseEntity<String> remoteResp = restTemplate.exchange(
+					remoteUrl, HttpMethod.GET, entity, String.class);
+			// (la llamada interna sigue siendo POST porque el microservicio
+			//  necesita el JSON; cámbiala si tu microservicio realmente expone GET)
+
+			/* 5. Devolvemos el HTML recibido ----------------------------------- */
 			return ResponseEntity.status(remoteResp.getStatusCode())
 					.contentType(MediaType.TEXT_HTML)
 					.body(remoteResp.getBody());
@@ -179,6 +197,7 @@ public class FuaController {
 					.body("Error procesando la solicitud: " + ex.getMessage());
 		}
 	}
+
 
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -193,7 +212,7 @@ public class FuaController {
 		return ResponseEntity.ok(fua);
 	}
 
-	@RequestMapping(value = "/visitInfo/{visitUuid}", method = RequestMethod.GET, produces = "application/json")
+	/*@RequestMapping(value = "/visitInfo/{visitUuid}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<?> getPayloadInfoByVisitUuid(@PathVariable("visitUuid") String visitUuid) {
 		Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
@@ -210,7 +229,7 @@ public class FuaController {
 		response.put("format", "---");
 
 		return ResponseEntity.ok(response);
-	}
+	}*/
 
 
 	@RequestMapping(value = "/solicitudes", method = RequestMethod.GET, produces = "application/json")
