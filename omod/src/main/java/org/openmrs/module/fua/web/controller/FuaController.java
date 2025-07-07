@@ -135,13 +135,13 @@ public class FuaController {
 	}
 
 	@RequestMapping(
-			value    = "/visitInfo/{visitUuid}/generator/{identifier}",
+			value    = "/visitInfo/{visitUuid}/generator/{identifierFormat}",
 			method   = RequestMethod.GET,
 			produces = "text/html")       // devolvemos HTML
 	@ResponseBody
 	public ResponseEntity<?> renderVisitInfo(
 			@PathVariable String visitUuid,
-			@PathVariable String identifier) {
+			@PathVariable String identifierFormat) {
 
 		try {
 			/* 1. Buscamos el FUA ------------------------------------------------ */
@@ -168,11 +168,11 @@ public class FuaController {
 			Map<String, Object> requestBody = new LinkedHashMap<>();
 			requestBody.put("payload", payloadJson);
 			requestBody.put("token",   "---");
-			requestBody.put("format",  "---");
+			//requestBody.put("format",  identifierFormat);
 
 			/* 4. Llamamos al microservicio ------------------------------------- */
 			String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
-					+ UriUtils.encodePath(identifier, StandardCharsets.UTF_8)
+					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
 					+ "/render";
 
 			HttpHeaders headers = new HttpHeaders();
