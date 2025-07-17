@@ -1,6 +1,5 @@
 package org.openmrs.module.fua.web.controller;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,6 @@ import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.FuaVersionService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.HttpEntity;
@@ -42,10 +40,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriUtils;
 
-import liquibase.pro.packaged.f;
-
-import org.openmrs.module.fua.FuaVersion;
-import org.openmrs.module.fua.api.FuaVersionService;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -55,7 +49,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.core.JsonProcessingException;   // ← la excepción
 import org.apache.commons.lang3.StringUtils;
-
 
 
 @Controller
