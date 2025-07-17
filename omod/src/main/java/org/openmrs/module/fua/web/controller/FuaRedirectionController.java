@@ -43,6 +43,9 @@ public class FuaRedirectionController {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
 
-        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+        return ResponseEntity
+                .status(response.getStatusCode())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response.getBody());
     }
 }
