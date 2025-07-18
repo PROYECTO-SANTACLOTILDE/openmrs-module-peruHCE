@@ -50,6 +50,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.core.JsonProcessingException;   // ← la excepción
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 
 @Controller
 @RequestMapping(value = "/module/fua")
@@ -158,7 +159,7 @@ public class FuaController {
 			}
 
 			/* 3. Construimos el body para el microservicio --------------------- */
-			Map<String, Object> requestBody = new LinkedHashMap<>();
+			Map<String, Object> requestBody = new HashMap<>();
 			requestBody.put("payload", payloadJson);
 
 			/* 4. Llamamos al microservicio ------------------------------------- */
@@ -175,7 +176,7 @@ public class FuaController {
 					new HttpComponentsClientHttpRequestFactory()); // permite body en GET
 
 			ResponseEntity<String> remoteResp = restTemplate.exchange(
-					remoteUrl, HttpMethod.GET, entity, String.class);
+					remoteUrl, HttpMethod.POST, entity, String.class);
 
 			/* 5. Devolvemos el HTML recibido ----------------------------------- */
 			return ResponseEntity.status(remoteResp.getStatusCode())
