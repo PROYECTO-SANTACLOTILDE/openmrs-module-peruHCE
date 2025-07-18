@@ -160,8 +160,6 @@ public class FuaController {
 			/* 3. Construimos el body para el microservicio --------------------- */
 			Map<String, Object> requestBody = new LinkedHashMap<>();
 			requestBody.put("payload", payloadJson);
-			requestBody.put("token",   "---");
-			//requestBody.put("format",  identifierFormat);
 
 			/* 4. Llamamos al microservicio ------------------------------------- */
 			String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
@@ -170,15 +168,14 @@ public class FuaController {
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("fuagentoken", "soyuntokenxd"); // ← tu header personalizado
 
 			HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 			RestTemplate restTemplate = new RestTemplate(
-					new HttpComponentsClientHttpRequestFactory()); // ← permite body en GET
+					new HttpComponentsClientHttpRequestFactory()); // permite body en GET
 
 			ResponseEntity<String> remoteResp = restTemplate.exchange(
 					remoteUrl, HttpMethod.GET, entity, String.class);
-			// (la llamada interna sigue siendo POST porque el microservicio
-			//  necesita el JSON; cámbiala si tu microservicio realmente expone GET)
 
 			/* 5. Devolvemos el HTML recibido ----------------------------------- */
 			return ResponseEntity.status(remoteResp.getStatusCode())
@@ -190,6 +187,7 @@ public class FuaController {
 					.body("Error procesando la solicitud: " + ex.getMessage());
 		}
 	}
+
 
 
 
