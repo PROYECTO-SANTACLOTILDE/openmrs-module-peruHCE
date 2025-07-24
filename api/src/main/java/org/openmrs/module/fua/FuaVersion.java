@@ -5,18 +5,25 @@ import org.openmrs.BaseOpenmrsObject;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
-@Table(name = "fua")
-public class Fua extends BaseOpenmrsObject implements Serializable {
+@Table(name = "fua_version")
+public class FuaVersion extends BaseOpenmrsObject implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "fua_id")
+	@Column(name = "fua_version_id")
 	private Integer id;
 	
 	@Column(name = "uuid", unique = true, nullable = false, length = 38)
 	private String uuid;
+	
+	@Column(name = "fua_id", nullable = false)
+	private Integer fuaId;
+	
+	@Column(name = "fua_uuid", nullable = false, length = 38)
+	private String fuaUuid;
 	
 	@Column(name = "visit_uuid", nullable = false, length = 38)
 	private String visitUuid;
@@ -32,19 +39,39 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 	@JoinColumn(name = "fua_estado_id", nullable = false)
 	private FuaEstado fuaEstado;
 	
-	@Column(name = "fecha_creacion", updatable = false, insertable = false)
+	@Column(name = "descripcion", length = 255)
+	private String descripcion;
+	
+	@Column(name = "fecha_creacion")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaCreacion;
 	
-	@Column(name = "fecha_actualizacion", insertable = false, updatable = false)
+	@Column(name = "fecha_actualizacion")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date fechaActualizacion;
 	
-	@Column(name = "version", nullable = false, insertable = false)
+	@Column(name = "version", nullable = false)
 	private Integer version;
 	
-	@Column(name = "activo", nullable = false, insertable = false)
+	@Column(name = "activo", nullable = false)
 	private Boolean activo;
+	
+	public FuaVersion() {
+	}
+	
+	public FuaVersion(Fua fua) {
+		this.uuid = UUID.randomUUID().toString();
+		this.fuaId = fua.getId();
+		this.fuaUuid = fua.getUuid();
+		this.visitUuid = fua.getVisitUuid();
+		this.name = fua.getName();
+		this.payload = fua.getPayload();
+		this.fuaEstado = fua.getFuaEstado();
+		this.fechaCreacion = fua.getFechaCreacion();
+		this.fechaActualizacion = fua.getFechaActualizacion();
+		this.version = fua.getVersion();
+		this.activo = fua.getActivo();
+	}
 	
 	// --- Getters y Setters ---
 	
@@ -56,12 +83,30 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 		this.id = id;
 	}
 	
+	@Override
 	public String getUuid() {
 		return uuid;
 	}
 	
+	@Override
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
+	}
+	
+	public Integer getFuaId() {
+		return fuaId;
+	}
+	
+	public void setFuaId(Integer fuaId) {
+		this.fuaId = fuaId;
+	}
+	
+	public String getFuaUuid() {
+		return fuaUuid;
+	}
+	
+	public void setFuaUuid(String fuaUuid) {
+		this.fuaUuid = fuaUuid;
 	}
 	
 	public String getVisitUuid() {
@@ -96,12 +141,16 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 		this.fuaEstado = fuaEstado;
 	}
 	
-	public Date getFechaCreacion() {
-		return fechaCreacion;
+	public String getDescripcion() {
+		return descripcion;
 	}
 	
-	public void setFechaCreacion(Date fechaCreacion) { ///CUIDADO CON ESTO PEDRO
-		this.fechaCreacion = fechaCreacion;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+	
+	public Date getFechaCreacion() {
+		return fechaCreacion;
 	}
 	
 	public Date getFechaActualizacion() {
@@ -112,16 +161,7 @@ public class Fua extends BaseOpenmrsObject implements Serializable {
 		return version;
 	}
 	
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
-	
 	public Boolean getActivo() {
 		return activo;
 	}
-	
-	public void setActivo(Boolean activo) {
-		this.activo = activo;
-	}
-	
 }

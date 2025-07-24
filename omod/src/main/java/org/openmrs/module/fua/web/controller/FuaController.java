@@ -1,5 +1,6 @@
 package org.openmrs.module.fua.web.controller;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,14 +15,16 @@ import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.FuaEstado;
 import org.openmrs.module.fua.api.FuaEstadoService;
 import org.openmrs.module.fua.api.FuaService;
+import org.openmrs.module.fua.api.FuaVersionService;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -35,11 +38,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriUtils;
 
-import javax.servlet.http.HttpSession;
+
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.core.JsonProcessingException;   // ← la excepción
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
 
 @Controller
 @RequestMapping(value = "/module/fua")
@@ -52,6 +63,9 @@ public class FuaController {
 
 	@Autowired
 	private FuaEstadoService fuaEstadoService;
+
+	@Autowired
+	private FuaVersionService fuaVersionService;
 	
 	/*@Autowired
 	private UserService userService;*/
@@ -102,7 +116,7 @@ public class FuaController {
 		return fuaService.getAllFuas();
 	}
 
-	@RequestMapping(value = "/{uuid}", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/uuid/{uuid}", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<?> getFuaByUuid(@PathVariable("uuid") String uuid) {
 		Fua fua = fuaService.getFuaByUuid(uuid);
@@ -113,6 +127,102 @@ public class FuaController {
 
 		return ResponseEntity.ok(fua);
 	}
+
+	@RequestMapping(
+			value    = "/visitInfo/{visitUuid}/generator/{identifierFormat}",
+			method   = RequestMethod.GET,
+			produces = "text/html")       // devolvemos HTML
+	@ResponseBody
+	public ResponseEntity<?> renderVisitInfo(
+			@PathVariable String visitUuid,
+			@PathVariable String identifierFormat) {
+
+		try {
+			/* 1. Buscamos el FUA ------------------------------------------------ */
+			Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+			if (fua == null) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND)
+						.body("FUA no encontrado para visitUuid: " + visitUuid);
+			}
+
+			/* 2. Pasamos payload de String → JSON ------------------------------ */
+			ObjectMapper mapper  = new ObjectMapper();
+			JsonNode payloadJson;
+			try {
+				payloadJson = StringUtils.isBlank(fua.getPayload())
+						? mapper.createObjectNode()
+						: mapper.readTree(fua.getPayload());
+
+			} catch (JsonProcessingException ex) {
+				// Si no es JSON válido, lo mandamos como texto
+				payloadJson = mapper.getNodeFactory().textNode(fua.getPayload());
+			}
+
+			/* 3. Construimos el body para el microservicio --------------------- */
+			Map<String, Object> requestBody = new HashMap<>();
+			requestBody.put("payload", payloadJson);
+
+			/* 4. Llamamos al microservicio ------------------------------------- */
+			String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
+					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
+					+ "/render";
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("fuagentoken", "soyuntokenxd"); // ← tu header personalizado
+
+			HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
+			RestTemplate restTemplate = new RestTemplate(
+					new HttpComponentsClientHttpRequestFactory()); // permite body en GET
+
+			ResponseEntity<String> remoteResp = restTemplate.exchange(
+					remoteUrl, HttpMethod.POST, entity, String.class);
+
+			/* 5. Devolvemos el HTML recibido ----------------------------------- */
+			return ResponseEntity.status(remoteResp.getStatusCode())
+					.contentType(MediaType.TEXT_HTML)
+					.body(remoteResp.getBody());
+
+		} catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+					.body("Error procesando la solicitud: " + ex.getMessage());
+		}
+	}
+
+
+
+
+	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> getFuaById(@PathVariable("id") Integer id) {
+		Fua fua = fuaService.getFuaById(id);
+
+		if (fua == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("FUA no encontrado por el Id: " + id);
+		}
+
+		return ResponseEntity.ok(fua);
+	}
+
+	/*@RequestMapping(value = "/visitInfo/{visitUuid}", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<?> getPayloadInfoByVisitUuid(@PathVariable("visitUuid") String visitUuid) {
+		Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+
+		if (fua == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+				.body("FUA no encontrado para visitUuid: " + visitUuid);
+		}
+
+		// Construir el objeto de respuesta
+		Map<String, String> response = new HashMap<>();
+		response.put("payload", fua.getPayload() != null ? fua.getPayload() : "");
+		response.put("token", "---");
+		response.put("format", "---");
+
+		return ResponseEntity.ok(response);
+	}*/
+
 
 	@RequestMapping(value = "/solicitudes", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
@@ -153,6 +263,7 @@ public class FuaController {
 	@ResponseBody
 	public ResponseEntity<?> generateFuaFromVisit(@PathVariable String visitUuid) {
 		try {
+			
 			log.info("Generando FUA desde visita UUID: " + visitUuid);
 
 			String url = "http://localhost:8080/openmrs/ws/rest/v1/visit/" + visitUuid + "?v=full";
@@ -182,11 +293,42 @@ public class FuaController {
 
 			FuaEstado estadoPendiente = fuaEstadoService.getEstado(1);
 
-			Fua fua = new Fua();
-			fua.setName("PRUEBA DE generateFuaFromVisit");
-			fua.setVisitUuid(visitUuid);
-			fua.setPayload(payload);
-			fua.setFuaEstado(estadoPendiente);
+			//HASTA ACA NO SE CAMBIA NADA
+
+			Fua fua = fuaService.getFuaByVisitUuid(visitUuid);
+
+			if (fua == null) {
+				fua = new Fua();
+				
+				fua.setName("PRUEBA DE generateFuaFromVisit");
+				fua.setVisitUuid(visitUuid);
+				fua.setPayload(payload);
+				fua.setFuaEstado(estadoPendiente);
+				System.out.println("///////////////EL FUA ES NULL///////////////////////////////////////////////: " + fua);
+				System.out.println("	EL FUA ES NUEVO:");
+				System.out.println("	UUID: " + fua.getUuid());
+				System.out.println("	ESTADO: " + fua.getFuaEstado());
+				System.out.println("	ID: " + fua.getId());
+			}
+			else{
+				fuaVersionService.saveFuaVersion(fua, "GenerateFromVisit");
+				fua.setPayload(payload);
+				System.out.println("///////////////EL FUA NO ES NULL///////////////////////////////////////////////: " + fua);
+			}
+			
+			System.out.println("===== DETALLES DEL FUA =====");
+			System.out.println("ID: " + fua.getId());
+			System.out.println("UUID: " + fua.getUuid());
+			System.out.println("Visit UUID: " + fua.getVisitUuid());
+			System.out.println("Name: " + fua.getName());
+			System.out.println("Payload: Siempre tiene algo xd");
+			System.out.println("Estado: " + (fua.getFuaEstado() != null ? fua.getFuaEstado().getNombre() : "null")); // Asumiendo que FuaEstado tiene getNombre()
+			System.out.println("Fecha de creación: " + fua.getFechaCreacion());
+			System.out.println("Fecha de actualización: " + fua.getFechaActualizacion());
+			System.out.println("Versión: " + fua.getVersion());
+			System.out.println("Activo: " + fua.getActivo());
+			System.out.println("==================================");
+
 
 			fuaService.saveFua(fua);
 
@@ -231,9 +373,15 @@ public class FuaController {
 				Double estadoDouble = (Double) body.get("estadoId");
 				nuevoEstadoId = estadoDouble.intValue();
 			}
-			FuaEstado estadoPendiente = fuaEstadoService.getEstado(nuevoEstadoId);
+			
+			Fua fua = fuaService.getFuaById(fuaId);
+			fuaVersionService.saveFuaVersion(fua, "Update estado de FUA");
 
-			Fua fua = fuaService.updateEstadoFua(fuaId, estadoPendiente);
+			FuaEstado estadoPendiente = fuaEstadoService.getEstado(nuevoEstadoId);
+			
+			fua.setFuaEstado(estadoPendiente);
+			fuaService.saveFua(fua);
+
 
 			return ResponseEntity.ok(fua);
 		} catch (Exception e) {

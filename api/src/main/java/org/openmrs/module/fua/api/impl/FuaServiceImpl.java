@@ -6,7 +6,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.fua.Fua;
 import org.openmrs.module.fua.FuaEstado;
-import org.openmrs.module.fua.api.FuaEstadoService;
+
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.dao.FuaDao;
 
@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
-	
-	private FuaEstadoService fuaEstadoService;
 	
 	private FuaDao dao;
 	
@@ -38,9 +36,6 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	
 	@Override
 	public Fua saveFua(Fua fua) throws APIException {
-		if (StringUtils.isBlank(fua.getUuid())) {
-			fua.setUuid(UUID.randomUUID().toString());
-		}
 		return dao.saveFua(fua);
 	}
 	
@@ -66,6 +61,14 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 	
 	public Fua getFuaByUuid(String uuid) throws APIException {
 		return dao.getFuaByUuid(uuid);
+	}
+	
+	public Fua getFuaByVisitUuid(String visitUuid) throws APIException {
+		return dao.getFuaByVisitUuid(visitUuid);
+	}
+	
+	public Fua getFuaById(Integer id) throws APIException {
+		return dao.getFua(id);
 	}
 	
 	@Override
