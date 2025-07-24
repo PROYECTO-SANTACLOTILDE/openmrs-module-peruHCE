@@ -6,7 +6,8 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>fua</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.21</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>fua-api</artifactId>
