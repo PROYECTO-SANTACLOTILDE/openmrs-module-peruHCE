@@ -6,7 +6,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!-- Tabla fua_estado -->
-    <changeSet id="fua_estado-2025-07-30-01" author="pedro">
+    <changeSet id="fua_estado-2025-08-22-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_estado"/></not>
         </preConditions>
@@ -36,7 +36,7 @@
     </changeSet>
 
     <!-- Tabla fua -->
-    <changeSet id="fua-2025-07-30-01" author="pedro">
+    <changeSet id="fua-2025-08-22-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua"/></not>
         </preConditions>
@@ -85,7 +85,7 @@
     </changeSet>
 
     <!-- Tabla fua_version -->
-    <changeSet id="fua_version-2025-07-30-01" author="pedro">
+    <changeSet id="fua_version-2025-08-22-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_version"/></not>
         </preConditions>
@@ -148,7 +148,7 @@
 
 
     <!-- Tabla fua_estado_version -->
-    <changeSet id="fua_estado_version-2025-07-30-01" author="pedro">
+    <changeSet id="fua_estado_version-2025-08-22-01" author="pedro">
         <preConditions onFail="MARK_RAN">
             <not><tableExists tableName="fua_estado_version"/></not>
         </preConditions>
@@ -192,7 +192,7 @@
     </changeSet>
 
     <!-- Trigger para actualizar fecha_actualizacion -->
-    <changeSet id="trigger_fua_fechaActualizacion-2025-07-30-01" author="pedro" dbms="mysql">
+    <changeSet id="trigger_fua_fechaActualizacion-2025-08-22-01" author="pedro" dbms="mysql">
         <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE en fua</comment>
         <sql>
             CREATE TRIGGER trg_fua_update_timestamp
@@ -203,7 +203,7 @@
     </changeSet>
 
     <!-- Trigger para actualizar fecha_actualizacion en fua_estado -->
-    <changeSet id="trigger_fua_estado_fechaActualizacion-2025-07-30-01" author="pedro" dbms="mysql">
+    <changeSet id="trigger_fua_estado_fechaActualizacion-2025-08-22-01" author="pedro" dbms="mysql">
         <comment>Trigger para actualizar automáticamente fecha_actualizacion en cada UPDATE en fua_estado</comment>
         <sql>
             CREATE TRIGGER trg_fua_estado_update_timestamp

@@ -161,15 +161,20 @@ public class FuaController {
 			/* 3. Construimos el body para el microservicio --------------------- */
 			Map<String, Object> requestBody = new HashMap<>();
 			requestBody.put("payload", payloadJson);
-
+			
 			/* 4. Llamamos al microservicio ------------------------------------- */
+			/*
 			String remoteUrl = "http://localhost:3000/ws/FUAFormat/"
+					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
+					+ "/render";
+			*/
+			String remoteUrl = "http://localhost:8080/openmrs/services/fua-generator/ws/FUAFormat/"
 					+ UriUtils.encodePath(identifierFormat, StandardCharsets.UTF_8)
 					+ "/render";
 
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.set("fuagentoken", "soyuntokenxd"); // ← tu header personalizado
+			headers.set("fuagentoken", "fuagenerator"); // ← tu header personalizado
 
 			HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 			RestTemplate restTemplate = new RestTemplate(

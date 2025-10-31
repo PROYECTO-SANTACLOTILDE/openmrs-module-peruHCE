@@ -5,7 +5,7 @@
   <parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>fua</artifactId>
-		<version>1.0.22</version>
+		<version>1.0.28</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>org.openmrs.module</groupId>
       <artifactId>fua-api</artifactId>
-      <version>1.0.22</version>
+      <version>1.0.28</version>
     </dependency>
     <dependency>
       <groupId>org.openmrs.web</groupId>
