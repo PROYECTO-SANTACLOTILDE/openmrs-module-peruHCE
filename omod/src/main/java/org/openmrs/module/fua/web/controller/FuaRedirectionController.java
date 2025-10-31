@@ -26,7 +26,7 @@ public class FuaRedirectionController {
     ) throws IOException {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("fuagentoken", "soyuntokenxd");
+        headers.set("fuagentoken", "fuagenerator");
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -41,7 +41,8 @@ public class FuaRedirectionController {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
+        //ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:3000/ws/FUAFormat", requestEntity, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8080/openmrs/services/fua-generator/ws/FUAFormat", requestEntity, String.class);
 
         return ResponseEntity
                 .status(response.getStatusCode())
