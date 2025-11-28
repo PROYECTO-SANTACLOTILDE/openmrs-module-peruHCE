@@ -121,11 +121,11 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>github</id>
-			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-peruHCE</url>
+			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-FUA</url>
 		</snapshotRepository>
 		<repository>
 			<id>github</id>
-			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-peruHCE</url>
+			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-FUA</url>
 		</repository>
 	</distributionManagement>
 

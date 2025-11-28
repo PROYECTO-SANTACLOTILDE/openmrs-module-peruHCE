@@ -20,7 +20,7 @@
 		<repository>
 			<id>github</id>
 			<name>GitHub FUA Module Packages</name>
-			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-peruHCE</url>
+			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-FUA</url>
 		</repository>
 	</distributionManagement>
 
