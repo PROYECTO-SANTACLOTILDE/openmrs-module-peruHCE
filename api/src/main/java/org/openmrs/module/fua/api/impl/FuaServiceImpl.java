@@ -10,7 +10,7 @@ import org.openmrs.module.fua.FuaEstado;
 import org.openmrs.module.fua.api.FuaService;
 import org.openmrs.module.fua.api.dao.FuaDao;
 
-import org.apache.commons.lang3.StringUtils; // Asegúrate de importar esto
+import org.apache.commons.lang3.StringUtils; 
 
 import java.time.LocalDate;
 import java.util.List;
@@ -51,8 +51,8 @@ public class FuaServiceImpl extends BaseOpenmrsService implements FuaService {
 		if (fua == null) {
 			throw new APIException("FUA no encontrado con ID: " + fuaId);
 		}
-		if (nuevoEstado == null) {
-			throw new APIException("Estado FUA no encontrado con ID: " + nuevoEstado.getId());
+		if (nuevoEstado == null || nuevoEstado.getId() == null) {
+			throw new APIException("Estado FUA no válido");
 		}
 		
 		fua.setFuaEstado(nuevoEstado);

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>fua</artifactId>
-		<version>1.0.28</version>
+		<version>1.0.28-test</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -23,5 +23,56 @@
 			<url>https://maven.pkg.github.com/PROYECTO-SANTACLOTILDE/openmrs-module-peruHCE</url>
 		</repository>
 	</distributionManagement>
+
+	<dependencies>
+		<!-- JUnit 4 para tests -->
+		<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.13.2</version>
+		<scope>test</scope>
+		</dependency>
+
+		<!-- Mockito para mocks -->
+		<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-core</artifactId>
+		<version>${mockitoVersion}</version>
+		<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-surefire-plugin</artifactId>
+			<version>2.22.2</version>
+		</plugin>
+		<plugin>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.8.8</version>
+			<executions>
+				<!-- 1) Prepara el agente antes de los tests -->
+				<execution>
+				<id>prepare-agent</id>
+				<goals>
+					<goal>prepare-agent</goal>
+				</goals>
+				</execution>
+
+				<!-- 2) Genera el reporte después de los tests -->
+				<execution>
+				<id>report</id>
+				<phase>test</phase> <!-- o "verify" si prefieres -->
+				<goals>
+					<goal>report</goal>
+				</goals>
+				</execution>
+			</executions>
+		</plugin>
+		</plugins>
+	</build>
 </project>
 

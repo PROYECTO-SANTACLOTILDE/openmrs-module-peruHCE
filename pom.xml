@@ -10,7 +10,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>fua</artifactId>
-	<version>1.0.28</version>
+	<version>1.0.28-test</version>
 	<packaging>pom</packaging>
 	<name>Fua</name>
 	<description>no description</description>
@@ -97,6 +97,17 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.8.1</version>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+			</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 	<distributionManagement>
@@ -112,6 +123,7 @@
 
 
 	<properties>
+		<fua.base.version>1.0.28</fua.base.version>
         <openmrsPlatformVersion>2.4.2</openmrsPlatformVersion>
         <openMRSVersion>2.3.2</openMRSVersion>
         <openMRSMinorVersion>2.3</openMRSMinorVersion>
@@ -120,5 +132,7 @@
         <junitJupiterVersion>5.7.0</junitJupiterVersion>
         <mockitoVersion>3.5.11</mockitoVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+    	<maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 </project>

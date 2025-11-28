@@ -1,15 +1,21 @@
-name: Deploy to GitHub Packages
+name: Unit Tests + Deploy test omod
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - tesis-pruebasAut    
+
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up JDK 8
         uses: actions/setup-java@v4
         with:
@@ -19,7 +25,15 @@ jobs:
           server-id: github
           server-username: module-bot
           server-password: MAVEN_TOKEN
+
+      # 1) Correr tests (si fallan, aquí se cae el job)
+      - name: Run unit tests
+        run: mvn -B clean test
+
+      # 2) Solo si los tests pasan, hacemos deploy
       - name: Deploy to GitHub Packages
-        run: mvn clean deploy -B -DskipTests
+        if: success()   
+        run: mvn -B deploy -DskipTests
         env:
           MAVEN_TOKEN: ${{ secrets.MODULE_TOKEN }}
+
