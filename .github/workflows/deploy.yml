@@ -28,9 +28,17 @@ jobs:
 
       # 1) Correr tests (si fallan, aquí se cae el job)
       - name: Run unit tests
-        run: mvn -B clean test
+        run: mvn -B -pl api clean test
+      
+      # 2) Subir el reporte Jacoco como artifact
+      - name: Upload Jacoco coverage report
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-jacoco-report
+          path: api/target/site/jacoco
 
-      # 2) Solo si los tests pasan, hacemos deploy
+      # 3) Solo si los tests pasan, hacemos deploy
       - name: Deploy to GitHub Packages
         if: success()   
         run: mvn -B deploy -DskipTests
